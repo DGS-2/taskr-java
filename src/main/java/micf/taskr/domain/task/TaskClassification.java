@@ -15,4 +15,22 @@ public class TaskClassification {
 
     @OneToMany(mappedBy = "classification")
     private String classification;
+
+    public TaskClassification() {}
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id){
+        this.id = id;
+    }
+
+    public String getClassification() {
+        return classification;
+    }
+
+    public void setClassification(String classification) {
+        this.classification = classification;
+    }
 }
