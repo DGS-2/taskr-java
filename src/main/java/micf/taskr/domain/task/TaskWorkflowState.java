@@ -5,7 +5,7 @@ import javax.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-@Table(name="task_thread")
+@Table(name="task_workflow_state")
 public class TaskWorkflowState {
     @Id
     @GeneratedValue(generator = "system-uuid")

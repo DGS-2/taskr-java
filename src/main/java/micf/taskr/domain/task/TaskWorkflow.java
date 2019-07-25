@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name="task_thread")
+@Table(name="task_workflow")
 public class TaskWorkflow {
     @Id
     @GeneratedValue(generator = "system-uuid")

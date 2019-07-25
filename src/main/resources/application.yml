@@ -18,6 +18,15 @@ spring:
         excluded-view-names: index.html
         servlet:
             content-type: text/html
+    jpa:
+        properties:
+            hibernate:
+                temp: 
+                    use_jdbc_metadata_defaults: false
+                dialect: org.hibernate.dialect.PostgreSQLDialect
+                jdbc:
+                    lob:
+                        non_contextual_creation: true
 # server:
 #   address: 127.0.0.1
 #   port: 8080
