@@ -1,20 +1,19 @@
 package micf.taskr.controller;
 
-// import java.util.List;
-import java.util.Collection;
-
-import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-// import org.springframework.web.bind.annotation.PostMapping;
-// import org.springframework.web.bind.annotation.PutMapping;
-// import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import micf.taskr.domain.task.*;
 import micf.taskr.service.task.TaskServiceImpl;
+
+// import java.util.List;
+import java.util.Collection;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+
 
 @RestController
 @RequestMapping("/api")
@@ -22,8 +21,8 @@ public class TaskRestController {
     private TaskServiceImpl taskService;
 
     @Autowired
-    public TaskRestController(TaskServiceImpl theTaskService) {
-        this.taskService = theTaskService;
+    public TaskRestController(TaskServiceImpl taskService) {
+        this.taskService = taskService;
     }
 
     @GetMapping("/test")
@@ -38,12 +37,12 @@ public class TaskRestController {
     }
 
     // Get task by id
-    @GetMapping("/tasks/{taskId}")
-    public Task getTask(@PathVariable String taskId) {
-        Task theTask = taskService.findById(taskId);
+    @GetMapping("/tasks/{id}")
+    public Task getTask(@PathVariable String id) {
+        Task theTask = taskService.findById(id);
         
         if(theTask == null) {
-            throw new RuntimeException("Task id not found - " + taskId);
+            throw new RuntimeException("Task id not found - " + id);
         }
 
         return theTask;

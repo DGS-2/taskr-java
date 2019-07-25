@@ -12,7 +12,7 @@ import micf.taskr.repository.task.TaskRepository;
 @Service
 public class TaskServiceImpl implements TaskService {
 
-    protected TaskRepository taskRepository;
+    private final TaskRepository taskRepository;
 
     @Autowired
     public TaskServiceImpl(TaskRepository taskRepository){
