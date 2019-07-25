@@ -27,7 +27,7 @@ public class Task {
     private String description;
 
     // foreign key to task_attachments table
-    private Set<TaskAttachment> attachments;
+    // private Set<TaskAttachment> attachments;
 
     @CreatedDate
     private Date createdDate;
@@ -46,6 +46,10 @@ public class Task {
     @OneToOne
     @JoinColumn
     private TaskThread messageThread;
+
+    @OneToOne
+    @JoinColumn
+    private TaskWorkflow taskWorkflow;
 
     public Task() {}
 
@@ -81,13 +85,13 @@ public class Task {
         this.description = description;
     }
 
-    public Set<TaskAttachment> getAttachments() {
-        return attachments;
-    }
+    // public Set<TaskAttachment> getAttachments() {
+    //     return attachments;
+    // }
 
-    public void setAttachments(Set<TaskAttachment> attachments) {
-        this.attachments = attachments;
-    }
+    // public void setAttachments(Set<TaskAttachment> attachments) {
+    //     this.attachments = attachments;
+    // }
 
     public Date getCreatedDate() {
         return createdDate;

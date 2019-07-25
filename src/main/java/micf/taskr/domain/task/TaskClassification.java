@@ -13,7 +13,7 @@ public class TaskClassification {
     @Column(name = "id")
     private String id;
 
-    @OneToMany(mappedBy = "classification")
+    // @OneToMany(mappedBy = "classification")
     private String classification;
 
     public TaskClassification() {}

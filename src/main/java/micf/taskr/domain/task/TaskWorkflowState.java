@@ -13,7 +13,7 @@ public class TaskWorkflowState {
     @Column(name = "id")
     private String id;
 
-    @OneToOne(mappedBy = "workflow_id")
+    // @OneToMany(mappedBy = "workflow_id")
     private String workflow_id;
 
     private String state;

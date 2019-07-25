@@ -17,7 +17,7 @@ public class TaskThreadMessage {
     @Column(name = "id")
     private String id;
 
-    @OneToOne(mappedBy = "thread_id")
+    @OneToOne(targetEntity = TaskThread.class)
     private String thread_id;
 
     @CreatedBy

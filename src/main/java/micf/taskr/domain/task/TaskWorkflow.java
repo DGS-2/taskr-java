@@ -4,6 +4,9 @@ import javax.persistence.*;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name="task_thread")
 public class TaskWorkflow {
@@ -13,12 +16,12 @@ public class TaskWorkflow {
     @Column(name = "id")
     private String id;
 
-    @OneToOne(mappedBy = "task_id")
+    @ManyToOne(targetEntity = Task.class)
     private String task_id;
 
-    @OneToMany
-    @JoinColumn
-    private TaskWorkflowState state;
+    @OneToMany(targetEntity = TaskWorkflowState.class)
+    @JoinColumn(name="workflow_id")
+    private Set<TaskWorkflowState> state = new HashSet<>();
 
     public TaskWorkflow() {}
 
@@ -38,11 +41,11 @@ public class TaskWorkflow {
         this.task_id = task_id;
     }
 
-    public TaskWorkflowState getState(){
+    public Set<TaskWorkflowState> getState(){
         return state;
     }
 
-    public void setState(TaskWorkflowState state) {
+    public void setState(Set<TaskWorkflowState> state) {
         this.state = state;
     }
 }

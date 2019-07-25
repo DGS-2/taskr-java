@@ -15,7 +15,7 @@ public class TaskThread {
     @Column(name = "id")
     private String id;
 
-    @OneToOne(mappedBy = "task_id")
+    @OneToOne(targetEntity = Task.class)
     private String task_id;
 
     @OneToMany
