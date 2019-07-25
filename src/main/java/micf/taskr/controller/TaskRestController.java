@@ -1,6 +1,7 @@
 package micf.taskr.controller;
 
 import java.util.List;
+import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 // import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,12 +23,17 @@ public class TaskRestController {
 
     @Autowired
     public TaskRestController(TaskServiceImpl theTaskService) {
-        taskService = theTaskService;
+        this.taskService = theTaskService;
+    }
+
+    @GetMapping("/test")
+    public String test(){
+        return "Welcome";
     }
 
     // Get all tasks
     @GetMapping("/tasks")
-    public List<Task> findAll() {
+    public Collection<Task> findAll() {
         return taskService.findAll();
     }
 

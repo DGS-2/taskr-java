@@ -20,7 +20,7 @@ public class TaskDAOHibernateImpl implements TaskDAO {
 
     @Autowired
     public TaskDAOHibernateImpl(EntityManager theEntityManager) {
-        entityManager = theEntityManager;
+        this.entityManager = theEntityManager;
     }
 
     @Override

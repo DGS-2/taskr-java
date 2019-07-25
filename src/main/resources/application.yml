@@ -1,6 +1,8 @@
 spring:
+    profiles:
+        active: spring.profiles.dev
     datasource:
-        platform: postres
+        platform: postgres
         url: jdbc:postgresql://127.0.0.1:52027/taskr
         username: taskr
         password: taskr
@@ -16,6 +18,6 @@ spring:
         excluded-view-names: index.html
         servlet:
             content-type: text/html
-server:
-  address: 127.0.0.1
-  port: 8443
+# server:
+#   address: 127.0.0.1
+#   port: 8080

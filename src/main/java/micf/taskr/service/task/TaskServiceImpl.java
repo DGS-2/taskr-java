@@ -16,7 +16,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Autowired
     public TaskServiceImpl(TaskDAO theTaskDAO) {
-        taskDAO = theTaskDAO;
+        this.taskDAO = theTaskDAO;
     }
 
     @Override
