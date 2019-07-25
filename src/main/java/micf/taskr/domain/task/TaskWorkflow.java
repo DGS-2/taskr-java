@@ -16,12 +16,11 @@ public class TaskWorkflow {
     @Column(name = "id")
     private String id;
 
-    @ManyToOne(targetEntity = Task.class)
+    @OneToOne(targetEntity = Task.class, mappedBy = "id")
     private String task_id;
 
     @OneToMany(targetEntity = TaskWorkflowState.class)
-    @JoinColumn(name="workflow_id")
-    private Set<TaskWorkflowState> state = new HashSet<>();
+    private Set<TaskWorkflowHistory> history = new HashSet<>();
 
     public TaskWorkflow() {}
 
@@ -41,11 +40,11 @@ public class TaskWorkflow {
         this.task_id = task_id;
     }
 
-    public Set<TaskWorkflowState> getState(){
-        return state;
+    public Set<TaskWorkflowHistory> getHistory(){
+        return history;
     }
 
-    public void setState(Set<TaskWorkflowState> state) {
-        this.state = state;
+    public void setHistory(Set<TaskWorkflowHistory> history) {
+        this.history = history;
     }
 }

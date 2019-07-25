@@ -20,6 +20,10 @@ public class TaskWorkflowState {
 
     private Number percentComplete;
 
+    private Boolean is_approval_required;
+
+    private String approver_id;
+
     public TaskWorkflowState() {
     }
 
@@ -53,5 +57,21 @@ public class TaskWorkflowState {
 
     public void setCompletedValue(Number percent) {
         this.percentComplete = percent;
+    }
+
+    public Boolean getApprovalRequirement() {
+        return is_approval_required;
+    }
+
+    public void setApprovalRequirement(Boolean requirement) {
+        this.is_approval_required = requirement;
+    }
+
+    public String getApproverId() {
+        return approver_id;
+    }
+
+    public void setApproverId(String id) {
+        this.approver_id = id;
     }
 }
