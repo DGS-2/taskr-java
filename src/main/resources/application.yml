@@ -19,6 +19,9 @@ spring:
         servlet:
             content-type: text/html
     jpa:
+        show-sql: true
+        hibernate:
+            ddl-auto: update
         properties:
             hibernate:
                 temp: 
