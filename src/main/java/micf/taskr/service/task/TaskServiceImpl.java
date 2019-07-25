@@ -7,27 +7,27 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import micf.taskr.domain.task.*;
-import micf.taskr.dao.task.*;
+import micf.taskr.repository.task.TaskRepository;
 
 @Service
 public class TaskServiceImpl implements TaskService {
 
-    private TaskDAO taskDAO;
+    protected TaskRepository taskRepository;
 
     @Autowired
-    public TaskServiceImpl(TaskDAO theTaskDAO) {
-        taskDAO = theTaskDAO;
+    public TaskServiceImpl(TaskRepository taskRepository){
+        this.taskRepository = taskRepository;
     }
 
     @Override
     @Transactional
     public List<Task> findAll() {
-        return taskDAO.findAll();
+        return taskRepository.findAll();
     }
 
     @Override
     @Transactional
     public Task findById(String id) {
-        return taskDAO.findById(id);
+        return taskRepository.findById(id);
     }
 }

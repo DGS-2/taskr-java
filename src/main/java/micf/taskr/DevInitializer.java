@@ -1,6 +1,6 @@
 package micf.taskr;
 
-import micf.taskr.dao.task.*;
+import micf.taskr.repository.task.*;
 import micf.taskr.service.task.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
