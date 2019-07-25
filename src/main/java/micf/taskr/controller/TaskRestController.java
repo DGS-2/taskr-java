@@ -13,15 +13,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import micf.taskr.domain.task.*;
-import micf.taskr.service.task.TaskService;
+import micf.taskr.service.task.TaskServiceImpl;
 
 @RestController
 @RequestMapping("/api")
 public class TaskRestController {
-    private TaskService taskService;
+    private TaskServiceImpl taskService;
 
     @Autowired
-    public TaskRestController(TaskService theTaskService) {
+    public TaskRestController(TaskServiceImpl theTaskService) {
         taskService = theTaskService;
     }
 
