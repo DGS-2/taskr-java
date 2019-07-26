@@ -14,7 +14,7 @@ public class OrganizationRoster {
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
 
-    @OneToOne(targetEntity = Organization.class, mappedBy = "id")
+    @ManyToOne(targetEntity = Organization.class)
     private String org_entity_id;
 
     @OneToMany(targetEntity = OrganizationUser.class, mappedBy = "id")

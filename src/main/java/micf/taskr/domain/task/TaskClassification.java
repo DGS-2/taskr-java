@@ -13,8 +13,8 @@ public class TaskClassification {
     @Column(name = "id")
     private String id;
 
-    // @OneToMany(mappedBy = "classification")
-    private String classification;
+    @OneToOne(mappedBy = "classification")
+    private Task classification;
 
     public TaskClassification() {}
 
@@ -26,11 +26,11 @@ public class TaskClassification {
         this.id = id;
     }
 
-    public String getClassification() {
+    public Task getClassification() {
         return classification;
     }
 
-    public void setClassification(String classification) {
+    public void setClassification(Task classification) {
         this.classification = classification;
     }
 }

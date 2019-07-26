@@ -16,8 +16,9 @@ public class User {
 
     private String lastName;
 
-    @OneToOne(targetEntity = UserAuth.class, mappedBy = "email")
-    private String email;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "email", referencedColumnName = "id")
+    private UserAuth email;
 
     private Boolean is_using_login_token;
 
@@ -45,11 +46,11 @@ public class User {
         this.lastName = lastName;
     }
 
-    public String getEmail(){
+    public UserAuth getEmail(){
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(UserAuth email) {
         this.email = email;
     }
 

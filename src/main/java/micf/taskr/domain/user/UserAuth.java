@@ -12,8 +12,8 @@ public class UserAuth {
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
 
-    @OneToOne(targetEntity = User.class, mappedBy = "email")
-    private String email;
+    @OneToOne(mappedBy="email")
+    private User email;
 
     private String hash;
 
@@ -25,11 +25,11 @@ public class UserAuth {
         this.id = id;
     }
 
-    public String getEmail(){
+    public User getEmail(){
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(User email) {
         this.email = email;
     }
 

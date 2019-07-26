@@ -6,7 +6,7 @@ import micf.taskr.domain.user.*;
 
 import java.util.List;
 
-public interface UserRepository extends JpaRepository {
+public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findAll();
 
     User findById(String id);

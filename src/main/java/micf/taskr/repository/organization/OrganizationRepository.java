@@ -6,7 +6,7 @@ import micf.taskr.domain.organization.*;
 
 import java.util.List;
 
-public interface OrganizationRepository extends JpaRepository {
+public interface OrganizationRepository extends JpaRepository<Organization, Long> {
     List<Organization> findAll();
 
     Organization findById(String id);

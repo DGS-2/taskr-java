@@ -12,10 +12,10 @@ public class OrganizationStructure {
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
 
-    @OneToOne(targetEntity = Organization.class, mappedBy = "id")
+    @OneToOne(targetEntity = Organization.class)
     private String parent_id;
 
-    @OneToOne(targetEntity = Organization.class, mappedBy = "id")
+    @ManyToOne(targetEntity = Organization.class)
     private String child_id;
 
     public String getId() {

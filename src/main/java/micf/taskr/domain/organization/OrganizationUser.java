@@ -16,10 +16,10 @@ public class OrganizationUser {
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
 
-    @OneToOne(targetEntity = OrganizationRoster.class, mappedBy = "id" )
+    @ManyToOne(targetEntity = OrganizationRoster.class )
     private String org_entity_roster_id;
 
-    @OneToOne(targetEntity = User.class, mappedBy = "id")
+    @ManyToOne(targetEntity = User.class)
     private String user_id;
 
     private String position;

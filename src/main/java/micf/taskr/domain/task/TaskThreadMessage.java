@@ -17,8 +17,8 @@ public class TaskThreadMessage {
     @Column(name = "id")
     private String id;
 
-    @OneToOne(targetEntity = TaskThread.class)
-    private String thread_id;
+    @ManyToOne
+    private TaskThread thread_id;
 
     @CreatedBy
     private String createdBy;
@@ -40,11 +40,11 @@ public class TaskThreadMessage {
         this.id = id;
     }
 
-    public String getThreadId() {
+    public TaskThread getThreadId() {
         return thread_id;
     }
 
-    public void setThreadId(String id) {
+    public void setThreadId(TaskThread id) {
         this.thread_id = id;
     }
 

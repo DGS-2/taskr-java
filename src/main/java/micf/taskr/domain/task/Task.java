@@ -7,7 +7,7 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.util.Date;
-import java.util.Set;
+// import java.util.Set;
 
 @Entity
 @Table(name="tasks")
@@ -18,8 +18,8 @@ public class Task {
     private String id;
 
     // foreign key to task_classification table
-    @ManyToOne
-    @JoinColumn
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "classification", referencedColumnName = "id")
     private TaskClassification classification;
 
     private String title;
@@ -43,12 +43,12 @@ public class Task {
 
     private String parentTask;
 
-    @OneToOne
-    @JoinColumn
-    private TaskThread messageThread;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "task_thread_id", referencedColumnName = "id")
+    private TaskThread messageThread; 
 
-    @OneToOne
-    @JoinColumn
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "workflow_task_id", referencedColumnName = "id")
     private TaskWorkflow taskWorkflow;
 
     public Task() {}

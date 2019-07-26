@@ -1,7 +1,7 @@
 package micf.taskr.controller;
 
-import micf.taskr.domain.task.*;
-import micf.taskr.service.task.TaskServiceImpl;
+import micf.taskr.domain.user.*;
+import micf.taskr.service.user.UserServiceImpl;
 
 // import java.util.List;
 import java.util.Collection;
@@ -14,24 +14,24 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
-public class TaskRestController {
-    private TaskServiceImpl taskService;
+public class UserRestController {
+    private UserServiceImpl userService;
 
     @Autowired
-    public TaskRestController(TaskServiceImpl taskService) {
-        this.taskService = taskService;
+    public UserRestController(UserServiceImpl userService) {
+        this.userService = userService;
     }
 
     // Get all tasks
-    @GetMapping("/tasks")
-    public Collection<Task> findAll() {
-        return taskService.findAll();
+    @GetMapping("/users")
+    public Collection<User> findAll() {
+        return userService.findAll();
     }
 
     // Get task by id
-    @GetMapping("/task/{id}")
-    public Task getTask(@PathVariable String id) {
-        Task theTask = taskService.findById(id);
+    @GetMapping("/user/{id}")
+    public User getTask(@PathVariable String id) {
+        User theTask = userService.findById(id);
         
         if(theTask == null) {
             throw new RuntimeException("Task id not found - " + id);

@@ -2,6 +2,7 @@ package micf.taskr;
 
 import micf.taskr.repository.task.*;
 import micf.taskr.service.task.*;
+import micf.taskr.service.user.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +16,9 @@ import org.springframework.stereotype.Component;
 public class DevInitializer implements ApplicationRunner {
     @Autowired
     private TaskServiceImpl taskServiceImpl;
+
+    @Autowired
+    private UserServiceImpl userServiceImpl;
 
     public DevInitializer() {}
 

@@ -1,6 +1,7 @@
 package micf.taskr.domain.task;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -19,8 +20,8 @@ public class TaskWorkflowHistory {
 
     private Date completed_date;
 
-    @OneToMany(targetEntity = TaskWorkflowState.class, mappedBy = "id")
-    private String completed_state;
+    @OneToMany(mappedBy = "workflow_id") 
+    private List<TaskWorkflowState> completed_state;
 
     public String getId(){
         return id;
@@ -46,11 +47,11 @@ public class TaskWorkflowHistory {
         this.completed_date = completedDate;
     }
 
-    public String getCompletedState() {
+    public List<TaskWorkflowState> getCompletedState() {
         return completed_state;
     }
 
-    public void setCompletedState(String state) {
+    public void setCompletedState(List<TaskWorkflowState> state) {
         this.completed_state = state;
     }
 }

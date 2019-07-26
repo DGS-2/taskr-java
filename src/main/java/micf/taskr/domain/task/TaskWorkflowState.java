@@ -11,10 +11,10 @@ public class TaskWorkflowState {
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     @Column(name = "id")
-    private String id;
+    private String id; 
 
-    // @OneToMany(mappedBy = "workflow_id")
-    private String workflow_id;
+    @ManyToOne
+    private TaskWorkflowHistory workflow_id;
 
     private String state;
 
@@ -35,11 +35,11 @@ public class TaskWorkflowState {
         this.id = id;
     }
 
-    public String getWorkflowId() {
+    public TaskWorkflowHistory getWorkflowId() {
         return workflow_id;
     }
 
-    public void setWorkflowId(String workflow_id) {
+    public void setWorkflowId(TaskWorkflowHistory workflow_id) {
         this.workflow_id = workflow_id;
     }
 

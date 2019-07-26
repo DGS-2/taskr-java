@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name="task_thread")
@@ -15,12 +15,11 @@ public class TaskThread {
     @Column(name = "id")
     private String id;
 
-    @OneToOne(targetEntity = Task.class)
-    private String task_id;
+    @OneToOne(mappedBy = "messageThread") 
+    private Task task_thread_id;
 
-    @OneToMany
-    @JoinColumn
-    private Set<TaskThreadMessage> message;
+    @OneToMany(mappedBy = "thread_id")
+    private List<TaskThreadMessage> messages;
 
     public TaskThread() {}
 
@@ -32,19 +31,19 @@ public class TaskThread {
         this.id = id;
     }
 
-    public String getTaskId() {
-        return task_id;
+    public Task getTaskId() {
+        return task_thread_id;
     }
 
-    public void setTaskId(String task_id) {
-        this.task_id = task_id;
+    public void setTaskId(Task task_thread_id) {
+        this.task_thread_id = task_thread_id;
     }
 
-    public Set<TaskThreadMessage> getThreadMessage() {
-        return message;
+    public List<TaskThreadMessage> getThreadMessage() {
+        return messages;
     }
 
-    public void addThreadMessage(Set<TaskThreadMessage> message) {
-        this.message = message;
+    public void addThreadMessage(List<TaskThreadMessage> messages) {
+        this.messages = messages;
     }
 }
