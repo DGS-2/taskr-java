@@ -18,6 +18,10 @@ spring:
         excluded-view-names: index.html
         servlet:
             content-type: text/html
+    security:
+        user:
+            name: taskr
+            password: taskr
     jpa:
         show-sql: true
         hibernate:

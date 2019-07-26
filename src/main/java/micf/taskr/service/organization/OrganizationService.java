@@ -6,7 +6,7 @@ import micf.taskr.domain.organization.*;
 
 public interface OrganizationService {
 
-    public List<Organization> findAll();
+    List<Organization> findAll();
 
-    public Organization findById(String id);
+    Organization findById(String id);
 }

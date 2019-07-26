@@ -6,7 +6,7 @@ import micf.taskr.domain.task.*;
 
 public interface TaskService {
 
-    public List<Task> findAll();
+    List<Task> findAll();
 
-    public Task findById(String id);
+    Task findById(String id);
 }

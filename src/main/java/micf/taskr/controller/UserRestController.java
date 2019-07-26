@@ -4,39 +4,37 @@ import micf.taskr.domain.user.*;
 import micf.taskr.service.user.UserServiceImpl;
 
 // import java.util.List;
-import java.util.Collection;
+import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import micf.taskr.security.user.*;
+import micf.taskr.service.user.*;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
 public class UserRestController {
-    private UserServiceImpl userService;
 
     @Autowired
-    public UserRestController(UserServiceImpl userService) {
-        this.userService = userService;
+    ActiveUserStore activeUserStore;
+
+    @Autowired
+    UserServiceImpl userService;
+
+    @GetMapping(value = "/loggedUsers")
+    public String getLoggedUsers(final Locale locale, final Model model) {
+        model.addAttribute("users", activeUserStore.getUsers());
+        return "users";
     }
 
-    // Get all tasks
-    @GetMapping("/users")
-    public Collection<User> findAll() {
-        return userService.findAll();
-    }
-
-    // Get task by id
-    @GetMapping("/user/{id}")
-    public User getTask(@PathVariable String id) {
-        User theTask = userService.findById(id);
-        
-        if(theTask == null) {
-            throw new RuntimeException("Task id not found - " + id);
-        }
-
-        return theTask;
+    @GetMapping(value = "/loggedUsersFromSessionRegistry")
+    public String getLoggedUsersFromSessionRegistry(final Locale locale, final Model model) {
+        model.addAttribute("users", userService.getUsersFromSessionRegistry());
+        return "users";
     }
 }
