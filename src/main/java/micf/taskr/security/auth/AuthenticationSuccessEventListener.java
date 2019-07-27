@@ -1,4 +1,6 @@
-package micf.taskr.security.login;
+package micf.taskr.security.auth;
+
+import micf.taskr.security.login.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -13,7 +15,7 @@ public class AuthenticationSuccessEventListener implements ApplicationListener<A
     private HttpServletRequest request;
 
     @Autowired
-    // private LoginAttemptService loginAttemptService;
+    private LoginAttemptService loginAttemptService;
 
     @Override
     public void onApplicationEvent(final AuthenticationSuccessEvent e) {
@@ -21,12 +23,12 @@ public class AuthenticationSuccessEventListener implements ApplicationListener<A
         // if (auth != null) {
         // loginAttemptService.loginSucceeded(auth.getRemoteAddress());
         // }
-        // final String xfHeader = request.getHeader("X-Forwarded-For");
-        // if (xfHeader == null) {
-        //     loginAttemptService.loginSucceeded(request.getRemoteAddr());
-        // } else {
-        //     loginAttemptService.loginSucceeded(xfHeader.split(",")[0]);
-        // }
+        final String xfHeader = request.getHeader("X-Forwarded-For");
+        if (xfHeader == null) {
+            loginAttemptService.loginSucceeded(request.getRemoteAddr());
+        } else {
+            loginAttemptService.loginSucceeded(xfHeader.split(",")[0]);
+        }
     }
 
 }

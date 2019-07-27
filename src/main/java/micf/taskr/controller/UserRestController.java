@@ -26,7 +26,8 @@ public class UserRestController {
     @Autowired
     UserServiceImpl userService;
 
-    @GetMapping(value = "/loggedUsers")
+
+    @GetMapping(value = "/users")
     public String getLoggedUsers(final Locale locale, final Model model) {
         model.addAttribute("users", activeUserStore.getUsers());
         return "users";

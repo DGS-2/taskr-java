@@ -34,10 +34,13 @@ dependencies {
 	// compile 'org.flywaydb:flyway-core'
 	runtime 'org.postgresql:postgresql'
 	compile 'org.springframework.boot:spring-boot-starter-security'
+    compile 'org.springframework.boot:spring-boot-starter-websocket'
     // testImplementation('org.springframework.security:spring-security-test')
     compile("org.springframework.boot:spring-boot-starter-thymeleaf")
     // compile group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-springsecurity5', version: '3.0.4.RELEASE'
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
     compile 'org.springframework.boot:spring-boot-starter-web'
     compile group: 'org.passay', name: 'passay', version: '1.0'
+    compile group: 'org.jboss.aerogear', name: 'aerogear-otp-java', version: '1.0.0'
+
 }
