@@ -64,9 +64,14 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    // Create different roles that will be used to authenticate API endpoints
     @Override
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(authProvider());
+        // auth.authenticationProvider(authProvider());
+        auth.inMemoryAuthentication()
+            .withUser("admin").password(encoder().encode("adminPass")).roles("ADMIN")
+            .and()
+            .withUser("user").password(encoder().encode("userPass")).roles("USER");
     }
 
     @Override
