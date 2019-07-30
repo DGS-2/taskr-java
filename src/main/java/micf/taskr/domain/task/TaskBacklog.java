@@ -26,7 +26,8 @@ public class TaskBacklog {
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
 
-    private Integer TaskSequence = 0;
+    private Integer workflowSequence = 0;
+    private Integer messageSequence = 0;
 
     private String taskIdentifier;
 
@@ -47,12 +48,14 @@ public class TaskBacklog {
 
 
 
+
     public TaskBacklog() {
     }
 
-    public TaskBacklog(String id, Integer TaskSequence, String taskIdentifier, Task task, List<TaskThreadMessage> messageThread, List<TaskWorkflowState> workflowState) {
+    public TaskBacklog(String id, Integer workflowSequence, Integer messageSequence, String taskIdentifier, Task task, List<TaskThreadMessage> messageThread, List<TaskWorkflowState> workflowState) {
         this.id = id;
-        this.TaskSequence = TaskSequence;
+        this.workflowSequence = workflowSequence;
+        this.messageSequence = messageSequence;
         this.taskIdentifier = taskIdentifier;
         this.task = task;
         this.messageThread = messageThread;
@@ -67,12 +70,20 @@ public class TaskBacklog {
         this.id = id;
     }
 
-    public Integer getTaskSequence() {
-        return this.TaskSequence;
+    public Integer getWorkflowSequence() {
+        return this.workflowSequence;
     }
 
-    public void setTaskSequence(Integer TaskSequence) {
-        this.TaskSequence = TaskSequence;
+    public void setWorkflowSequence(Integer workflowSequence) {
+        this.workflowSequence = workflowSequence;
+    }
+
+    public Integer getMessageSequence() {
+        return this.messageSequence;
+    }
+
+    public void setMessageSequence(Integer messageSequence) {
+        this.messageSequence = messageSequence;
     }
 
     public String getTaskIdentifier() {
@@ -112,8 +123,13 @@ public class TaskBacklog {
         return this;
     }
 
-    public TaskBacklog TaskSequence(Integer TaskSequence) {
-        this.TaskSequence = TaskSequence;
+    public TaskBacklog workflowSequence(Integer workflowSequence) {
+        this.workflowSequence = workflowSequence;
+        return this;
+    }
+
+    public TaskBacklog messageSequence(Integer messageSequence) {
+        this.messageSequence = messageSequence;
         return this;
     }
 
@@ -145,25 +161,27 @@ public class TaskBacklog {
             return false;
         }
         TaskBacklog taskBacklog = (TaskBacklog) o;
-        return Objects.equals(id, taskBacklog.id) && Objects.equals(TaskSequence, taskBacklog.TaskSequence) && Objects.equals(taskIdentifier, taskBacklog.taskIdentifier) && Objects.equals(task, taskBacklog.task) && Objects.equals(messageThread, taskBacklog.messageThread) && Objects.equals(workflowState, taskBacklog.workflowState);
+        return Objects.equals(id, taskBacklog.id) && Objects.equals(workflowSequence, taskBacklog.workflowSequence) && Objects.equals(messageSequence, taskBacklog.messageSequence) && Objects.equals(taskIdentifier, taskBacklog.taskIdentifier) && Objects.equals(task, taskBacklog.task) && Objects.equals(messageThread, taskBacklog.messageThread) && Objects.equals(workflowState, taskBacklog.workflowState);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, TaskSequence, taskIdentifier, task, messageThread, workflowState);
+        return Objects.hash(id, workflowSequence, messageSequence, taskIdentifier, task, messageThread, workflowState);
     }
 
     @Override
     public String toString() {
         return "{" +
             " id='" + getId() + "'" +
-            ", TaskSequence='" + getTaskSequence() + "'" +
+            ", workflowSequence='" + getWorkflowSequence() + "'" +
+            ", messageSequence='" + getMessageSequence() + "'" +
             ", taskIdentifier='" + getTaskIdentifier() + "'" +
             ", task='" + getTask() + "'" +
             ", messageThread='" + getMessageThread() + "'" +
             ", workflowState='" + getWorkflowState() + "'" +
             "}";
     }
+    
     
     
 }

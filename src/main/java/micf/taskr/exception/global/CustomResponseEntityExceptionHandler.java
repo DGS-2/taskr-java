@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import micf.taskr.exception.task.TaskNotFoundException;
+import micf.taskr.exception.task.TaskNotFoundExceptionResponse;
 import micf.taskr.exception.task.TaskTitleException;
 import micf.taskr.exception.task.TaskTitleExceptionResponse;
 
@@ -18,6 +20,13 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
     @ExceptionHandler
     public final ResponseEntity<Object> handleTaskTitleException(TaskTitleException ex, WebRequest request) {
         TaskTitleExceptionResponse exceptionResponse = new TaskTitleExceptionResponse(ex.getMessage());
+
+        return new ResponseEntity<Object>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public final ResponseEntity<Object> handleTaskNotFoundException(TaskNotFoundException ex, WebRequest request) {
+        TaskNotFoundExceptionResponse exceptionResponse = new TaskNotFoundExceptionResponse(ex.getMessage());
 
         return new ResponseEntity<Object>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
