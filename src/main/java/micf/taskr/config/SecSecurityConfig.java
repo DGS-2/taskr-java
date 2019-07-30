@@ -82,37 +82,37 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
         // @formatter:off
-        http
-            .csrf().disable()
-            .authorizeRequests()
-                .antMatchers(HttpMethod.OPTIONS, "/**").denyAll()
-                .antMatchers(HttpMethod.TRACE, "/**").denyAll()
-                .antMatchers(HttpMethod.PATCH, "/**").denyAll()
-                .antMatchers(HttpMethod.HEAD, "/**").denyAll()
-                .antMatchers("/built/**", "/*.scss", "/*.css", "/login**", "/*.js", "/static/**", "/images/**", "/js/**", "/style/**", "/*.ico", "/*.pdf").permitAll()
-                .antMatchers("/user/updatePassword*","/user/savePassword*","/updatePassword*").hasAuthority("CHANGE_PASSWORD_PRIVILEGE")
-                .anyRequest().hasAuthority("READ_PRIVILEGE")
-                .and()
-            .formLogin()
-                .loginPage("/login")
-                .defaultSuccessUrl("/")
-                .failureUrl("/login?error=true")
-                .successHandler(myAuthenticationSuccessHandler)
-                .failureHandler(authenticationFailureHandler)
-            .permitAll()
-                .and()
-            .sessionManagement()
-                .invalidSessionUrl("/login")
-                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
-                .maximumSessions(3).sessionRegistry(sessionRegistry()).and()
-                .sessionFixation().none()
-            .and()
-            .logout()
-                .logoutSuccessHandler(myLogoutSuccessHandler)
-                .invalidateHttpSession(false)
-                .logoutSuccessUrl("/")
-                .deleteCookies("JSESSIONID")
-                .permitAll();
+        // http
+        //     .csrf().disable()
+        //     .authorizeRequests()
+        //         .antMatchers(HttpMethod.OPTIONS, "/**").denyAll()
+        //         .antMatchers(HttpMethod.TRACE, "/**").denyAll()
+        //         .antMatchers(HttpMethod.PATCH, "/**").denyAll()
+        //         .antMatchers(HttpMethod.HEAD, "/**").denyAll()
+        //         .antMatchers("/built/**", "/*.scss", "/*.css", "/login**", "/*.js", "/static/**", "/images/**", "/js/**", "/style/**", "/*.ico", "/*.pdf").permitAll()
+        //         .antMatchers("/user/updatePassword*","/user/savePassword*","/updatePassword*").hasAuthority("CHANGE_PASSWORD_PRIVILEGE")
+        //         .anyRequest().hasAuthority("READ_PRIVILEGE")
+        //         .and()
+        //     .formLogin()
+        //         .loginPage("/login")
+        //         .defaultSuccessUrl("/")
+        //         .failureUrl("/login?error=true")
+        //         .successHandler(myAuthenticationSuccessHandler)
+        //         .failureHandler(authenticationFailureHandler)
+        //     .permitAll()
+        //         .and()
+        //     .sessionManagement()
+        //         .invalidSessionUrl("/login")
+        //         .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+        //         .maximumSessions(3).sessionRegistry(sessionRegistry()).and()
+        //         .sessionFixation().none()
+        //     .and()
+        //     .logout()
+        //         .logoutSuccessHandler(myLogoutSuccessHandler)
+        //         .invalidateHttpSession(false)
+        //         .logoutSuccessUrl("/")
+        //         .deleteCookies("JSESSIONID")
+        //         .permitAll();
             //  .and()
             //     .rememberMe().rememberMeServices(rememberMeServices()).key("theKey");
     // @formatter:on
@@ -120,13 +120,13 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
 
     // beans
 
-    @Bean
-    public DaoAuthenticationProvider authProvider() {
-        final CustomAuthenticationProvider authProvider = new CustomAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(encoder());
-        return authProvider;
-    }
+    // @Bean
+    // public DaoAuthenticationProvider authProvider() {
+    //     final CustomAuthenticationProvider authProvider = new CustomAuthenticationProvider();
+    //     authProvider.setUserDetailsService(userDetailsService);
+    //     authProvider.setPasswordEncoder(encoder());
+    //     return authProvider;
+    // }
 
     @Bean
     public PasswordEncoder encoder() {

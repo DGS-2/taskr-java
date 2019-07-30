@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import micf.taskr.domain.task.*;
+import micf.taskr.domain.task.Task;
+import micf.taskr.domain.task.TaskBacklog;
 import micf.taskr.exception.task.TaskTitleException;
+import micf.taskr.repository.task.TaskBacklogRepository;
 import micf.taskr.repository.task.TaskRepository;
 
 @Service
@@ -15,13 +17,26 @@ public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
 
+    private final TaskBacklogRepository taskBacklogRepository;
+
     @Autowired
-    public TaskServiceImpl(TaskRepository taskRepository){
+    public TaskServiceImpl(TaskRepository taskRepository, TaskBacklogRepository taskBacklogRepository){
         this.taskRepository = taskRepository;
+        this.taskBacklogRepository = taskBacklogRepository;
     }
+
 
     public Task saveOrUpdateTask(Task task) {
         try{
+            if(task.getId() == null){
+                TaskBacklog taskBacklog = new TaskBacklog();
+                task.setBacklog(taskBacklog);
+                taskBacklog.setTask(task);
+                taskBacklog.setTaskIdentifier(task.getTaskIdentifier());
+            } 
+            if(task.getId() != null) {
+                task.setBacklog(taskBacklogRepository.findByTaskIdentifier(task.getTaskIdentifier()));
+            }
             return taskRepository.save(task);
         } catch (Exception e) {
             throw new TaskTitleException("Task '" + task.getId() + "' already exists");
