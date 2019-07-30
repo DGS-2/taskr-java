@@ -70,5 +70,14 @@ public class TaskRestController {
     }
 
     // Update Task
-    
+    @PostMapping("/update-task/{id}")
+    public ResponseEntity<?> updateTask(@Valid @RequestBody Task task, BindingResult result) {
+
+        ResponseEntity<?> errorMap = mapValidationError.MapValidationErrors(result);
+
+        if(errorMap != null) return errorMap;
+
+        Task newTask = taskService.saveOrUpdateTask(task);
+        return new ResponseEntity<Task>(newTask, HttpStatus.CREATED);
+    }
 }
