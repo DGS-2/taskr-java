@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import micf.taskr.domain.task.*;
+import micf.taskr.exception.task.TaskTitleException;
 import micf.taskr.repository.task.TaskRepository;
 
 @Service
@@ -19,6 +20,14 @@ public class TaskServiceImpl implements TaskService {
         this.taskRepository = taskRepository;
     }
 
+    public Task saveOrUpdateTask(Task task) {
+        try{
+            return taskRepository.save(task);
+        } catch (Exception e) {
+            throw new TaskTitleException("Task '" + task.getId() + "' already exists");
+        }        
+    }
+
     @Override
     @Transactional
     public List<Task> findAll() {
@@ -28,6 +37,10 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     public Task findById(String id) {
-        return taskRepository.findById(id);
+        Task task = taskRepository.findById(id);
+
+        if(task == null) throw new TaskTitleException("Task '" + id + "' does not exist");
+
+        return task;
     }
 }

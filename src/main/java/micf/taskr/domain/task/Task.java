@@ -1,6 +1,7 @@
 package micf.taskr.domain.task;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedBy;
@@ -18,12 +19,15 @@ public class Task {
     private String id;
 
     // foreign key to task_classification table
+    @NotBlank(message = "Classification cannot be left blank")
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "classification", referencedColumnName = "id")
     private TaskClassification classification;
 
+    @NotBlank(message = "Title cannot be left blank")
     private String title;
 
+    @NotBlank(message = "Description cannot be left blank")
     private String description;
 
     // foreign key to task_attachments table
@@ -32,6 +36,7 @@ public class Task {
     @CreatedDate
     private Date createdDate;
 
+    @NotBlank(message = "Due date cannot be left blank")
     private Date dueDate;
 
     // needs to be a foreign key to Users table
