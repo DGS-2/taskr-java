@@ -1,8 +1,8 @@
 package micf.taskr;
 
 import micf.taskr.repository.task.*;
-import micf.taskr.service.task.*;
-import micf.taskr.service.user.*;
+import micf.taskr.service.task.TaskServiceImpl;
+import micf.taskr.service.user.UserServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

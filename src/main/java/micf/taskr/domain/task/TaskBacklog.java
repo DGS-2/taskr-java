@@ -1,15 +1,17 @@
 package micf.taskr.domain.task;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.JoinColumn;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -33,17 +35,28 @@ public class TaskBacklog {
     @JoinColumn(name = "task_id", nullable = false)
     @JsonIgnore
     private Task task;
+    
+    // Here we will store the backlog of each message in the message thread
     //OneToMany 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "backlog")
+    private List<TaskThreadMessage> messageThread = new ArrayList<>();
+
+    // Here we will store the backlog of each workflow update
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "backlog")
+    private List<TaskWorkflowState> workflowState = new ArrayList<>();
+
 
 
     public TaskBacklog() {
     }
 
-    public TaskBacklog(String id, Integer TaskSequence, String taskIdentifier, Task task) {
+    public TaskBacklog(String id, Integer TaskSequence, String taskIdentifier, Task task, List<TaskThreadMessage> messageThread, List<TaskWorkflowState> workflowState) {
         this.id = id;
         this.TaskSequence = TaskSequence;
         this.taskIdentifier = taskIdentifier;
         this.task = task;
+        this.messageThread = messageThread;
+        this.workflowState = workflowState;
     }
 
     public String getId() {
@@ -78,6 +91,22 @@ public class TaskBacklog {
         this.task = task;
     }
 
+    public List<TaskThreadMessage> getMessageThread() {
+        return this.messageThread;
+    }
+
+    public void setMessageThread(List<TaskThreadMessage> messageThread) {
+        this.messageThread = messageThread;
+    }
+
+    public List<TaskWorkflowState> getWorkflowState() {
+        return this.workflowState;
+    }
+
+    public void setWorkflowState(List<TaskWorkflowState> workflowState) {
+        this.workflowState = workflowState;
+    }
+
     public TaskBacklog id(String id) {
         this.id = id;
         return this;
@@ -98,6 +127,16 @@ public class TaskBacklog {
         return this;
     }
 
+    public TaskBacklog messageThread(List<TaskThreadMessage> messageThread) {
+        this.messageThread = messageThread;
+        return this;
+    }
+
+    public TaskBacklog workflowState(List<TaskWorkflowState> workflowState) {
+        this.workflowState = workflowState;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -106,12 +145,12 @@ public class TaskBacklog {
             return false;
         }
         TaskBacklog taskBacklog = (TaskBacklog) o;
-        return Objects.equals(id, taskBacklog.id) && Objects.equals(TaskSequence, taskBacklog.TaskSequence) && Objects.equals(taskIdentifier, taskBacklog.taskIdentifier) && Objects.equals(task, taskBacklog.task);
+        return Objects.equals(id, taskBacklog.id) && Objects.equals(TaskSequence, taskBacklog.TaskSequence) && Objects.equals(taskIdentifier, taskBacklog.taskIdentifier) && Objects.equals(task, taskBacklog.task) && Objects.equals(messageThread, taskBacklog.messageThread) && Objects.equals(workflowState, taskBacklog.workflowState);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, TaskSequence, taskIdentifier, task);
+        return Objects.hash(id, TaskSequence, taskIdentifier, task, messageThread, workflowState);
     }
 
     @Override
@@ -121,7 +160,10 @@ public class TaskBacklog {
             ", TaskSequence='" + getTaskSequence() + "'" +
             ", taskIdentifier='" + getTaskIdentifier() + "'" +
             ", task='" + getTask() + "'" +
+            ", messageThread='" + getMessageThread() + "'" +
+            ", workflowState='" + getWorkflowState() + "'" +
             "}";
     }
+    
     
 }

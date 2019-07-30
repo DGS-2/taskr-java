@@ -3,14 +3,17 @@ package micf.taskr.domain.task;
 import java.util.Date;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedBy;
@@ -38,17 +41,23 @@ public class TaskThreadMessage {
 
     private String message;
 
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "task_backlog_id", updatable = false, nullable = false)
+    @JsonIgnore
+    private TaskBacklog backlog;
+
 
     public TaskThreadMessage() {
     }
 
-    public TaskThreadMessage(String id, TaskThread thread_id, String createdBy, Date createdDate, String messageTo, String message) {
+    public TaskThreadMessage(String id, TaskThread thread_id, String createdBy, Date createdDate, String messageTo, String message, TaskBacklog backlog) {
         this.id = id;
         this.thread_id = thread_id;
         this.createdBy = createdBy;
         this.createdDate = createdDate;
         this.messageTo = messageTo;
         this.message = message;
+        this.backlog = backlog;
     }
 
     public String getId() {
@@ -99,6 +108,14 @@ public class TaskThreadMessage {
         this.message = message;
     }
 
+    public TaskBacklog getBacklog() {
+        return this.backlog;
+    }
+
+    public void setBacklog(TaskBacklog backlog) {
+        this.backlog = backlog;
+    }
+
     public TaskThreadMessage id(String id) {
         this.id = id;
         return this;
@@ -129,6 +146,11 @@ public class TaskThreadMessage {
         return this;
     }
 
+    public TaskThreadMessage backlog(TaskBacklog backlog) {
+        this.backlog = backlog;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -137,12 +159,12 @@ public class TaskThreadMessage {
             return false;
         }
         TaskThreadMessage taskThreadMessage = (TaskThreadMessage) o;
-        return Objects.equals(id, taskThreadMessage.id) && Objects.equals(thread_id, taskThreadMessage.thread_id) && Objects.equals(createdBy, taskThreadMessage.createdBy) && Objects.equals(createdDate, taskThreadMessage.createdDate) && Objects.equals(messageTo, taskThreadMessage.messageTo) && Objects.equals(message, taskThreadMessage.message);
+        return Objects.equals(id, taskThreadMessage.id) && Objects.equals(thread_id, taskThreadMessage.thread_id) && Objects.equals(createdBy, taskThreadMessage.createdBy) && Objects.equals(createdDate, taskThreadMessage.createdDate) && Objects.equals(messageTo, taskThreadMessage.messageTo) && Objects.equals(message, taskThreadMessage.message) && Objects.equals(backlog, taskThreadMessage.backlog);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, thread_id, createdBy, createdDate, messageTo, message);
+        return Objects.hash(id, thread_id, createdBy, createdDate, messageTo, message, backlog);
     }
 
     @Override
@@ -154,6 +176,7 @@ public class TaskThreadMessage {
             ", createdDate='" + getCreatedDate() + "'" +
             ", messageTo='" + getMessageTo() + "'" +
             ", message='" + getMessage() + "'" +
+            ", backlog='" + getBacklog() + "'" +
             "}";
     }
     

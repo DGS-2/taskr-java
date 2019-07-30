@@ -2,14 +2,17 @@ package micf.taskr.domain.task;
 
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -33,17 +36,23 @@ public class TaskWorkflowState {
 
     private String approver_id;
 
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "task_backlog_id", updatable = false, nullable = false)
+    @JsonIgnore
+    private TaskBacklog backlog;
+
 
     public TaskWorkflowState() {
     }
 
-    public TaskWorkflowState(String id, TaskWorkflowHistory workflow_id, String state, Integer percentComplete, Boolean is_approval_required, String approver_id) {
+    public TaskWorkflowState(String id, TaskWorkflowHistory workflow_id, String state, Integer percentComplete, Boolean is_approval_required, String approver_id, TaskBacklog backlog) {
         this.id = id;
         this.workflow_id = workflow_id;
         this.state = state;
         this.percentComplete = percentComplete;
         this.is_approval_required = is_approval_required;
         this.approver_id = approver_id;
+        this.backlog = backlog;
     }
 
     public String getId() {
@@ -98,6 +107,14 @@ public class TaskWorkflowState {
         this.approver_id = approver_id;
     }
 
+    public TaskBacklog getBacklog() {
+        return this.backlog;
+    }
+
+    public void setBacklog(TaskBacklog backlog) {
+        this.backlog = backlog;
+    }
+
     public TaskWorkflowState id(String id) {
         this.id = id;
         return this;
@@ -128,6 +145,11 @@ public class TaskWorkflowState {
         return this;
     }
 
+    public TaskWorkflowState backlog(TaskBacklog backlog) {
+        this.backlog = backlog;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -136,12 +158,12 @@ public class TaskWorkflowState {
             return false;
         }
         TaskWorkflowState taskWorkflowState = (TaskWorkflowState) o;
-        return Objects.equals(id, taskWorkflowState.id) && Objects.equals(workflow_id, taskWorkflowState.workflow_id) && Objects.equals(state, taskWorkflowState.state) && Objects.equals(percentComplete, taskWorkflowState.percentComplete) && Objects.equals(is_approval_required, taskWorkflowState.is_approval_required) && Objects.equals(approver_id, taskWorkflowState.approver_id);
+        return Objects.equals(id, taskWorkflowState.id) && Objects.equals(workflow_id, taskWorkflowState.workflow_id) && Objects.equals(state, taskWorkflowState.state) && Objects.equals(percentComplete, taskWorkflowState.percentComplete) && Objects.equals(is_approval_required, taskWorkflowState.is_approval_required) && Objects.equals(approver_id, taskWorkflowState.approver_id) && Objects.equals(backlog, taskWorkflowState.backlog);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, workflow_id, state, percentComplete, is_approval_required, approver_id);
+        return Objects.hash(id, workflow_id, state, percentComplete, is_approval_required, approver_id, backlog);
     }
 
     @Override
@@ -153,7 +175,9 @@ public class TaskWorkflowState {
             ", percentComplete='" + getPercentComplete() + "'" +
             ", is_approval_required='" + isIs_approval_required() + "'" +
             ", approver_id='" + getApprover_id() + "'" +
+            ", backlog='" + getBacklog() + "'" +
             "}";
     }
+    
     
 }
