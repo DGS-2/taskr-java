@@ -1,5 +1,7 @@
 package micf.taskr.service.task;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,8 +48,8 @@ public class TaskMessageServiceImpl implements TaskMessageService {
     }
 
     @Override
-    public TaskThreadMessage findByBacklogId(String id) {
-        return null;
+    public List<TaskThreadMessage> findByBacklogId(String id) {
+        return taskThreadMessageRepository.findByTaskIdentifier(id);
     }
 
     
