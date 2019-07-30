@@ -28,8 +28,8 @@ public class TaskThreadMessage {
     @Column(name = "id")
     private String id;
 
-    @ManyToOne
-    private TaskThread thread_id;
+    @Column(updatable = false)
+    private String taskSequence;
 
     @CreatedBy
     private String createdBy;
@@ -46,18 +46,22 @@ public class TaskThreadMessage {
     @JsonIgnore
     private TaskBacklog backlog;
 
+    private String taskIdentifier;
+
+
 
     public TaskThreadMessage() {
     }
 
-    public TaskThreadMessage(String id, TaskThread thread_id, String createdBy, Date createdDate, String messageTo, String message, TaskBacklog backlog) {
+    public TaskThreadMessage(String id, String taskSequence, String createdBy, Date createdDate, String messageTo, String message, TaskBacklog backlog, String taskIdentifier) {
         this.id = id;
-        this.thread_id = thread_id;
+        this.taskSequence = taskSequence;
         this.createdBy = createdBy;
         this.createdDate = createdDate;
         this.messageTo = messageTo;
         this.message = message;
         this.backlog = backlog;
+        this.taskIdentifier = taskIdentifier;
     }
 
     public String getId() {
@@ -68,12 +72,12 @@ public class TaskThreadMessage {
         this.id = id;
     }
 
-    public TaskThread getThread_id() {
-        return this.thread_id;
+    public String getTaskSequence() {
+        return this.taskSequence;
     }
 
-    public void setThread_id(TaskThread thread_id) {
-        this.thread_id = thread_id;
+    public void setTaskSequence(String taskSequence) {
+        this.taskSequence = taskSequence;
     }
 
     public String getCreatedBy() {
@@ -116,13 +120,21 @@ public class TaskThreadMessage {
         this.backlog = backlog;
     }
 
+    public String getTaskIdentifier() {
+        return this.taskIdentifier;
+    }
+
+    public void setTaskIdentifier(String taskIdentifier) {
+        this.taskIdentifier = taskIdentifier;
+    }
+
     public TaskThreadMessage id(String id) {
         this.id = id;
         return this;
     }
 
-    public TaskThreadMessage thread_id(TaskThread thread_id) {
-        this.thread_id = thread_id;
+    public TaskThreadMessage taskSequence(String taskSequence) {
+        this.taskSequence = taskSequence;
         return this;
     }
 
@@ -151,6 +163,11 @@ public class TaskThreadMessage {
         return this;
     }
 
+    public TaskThreadMessage taskIdentifier(String taskIdentifier) {
+        this.taskIdentifier = taskIdentifier;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -159,25 +176,27 @@ public class TaskThreadMessage {
             return false;
         }
         TaskThreadMessage taskThreadMessage = (TaskThreadMessage) o;
-        return Objects.equals(id, taskThreadMessage.id) && Objects.equals(thread_id, taskThreadMessage.thread_id) && Objects.equals(createdBy, taskThreadMessage.createdBy) && Objects.equals(createdDate, taskThreadMessage.createdDate) && Objects.equals(messageTo, taskThreadMessage.messageTo) && Objects.equals(message, taskThreadMessage.message) && Objects.equals(backlog, taskThreadMessage.backlog);
+        return Objects.equals(id, taskThreadMessage.id) && Objects.equals(taskSequence, taskThreadMessage.taskSequence) && Objects.equals(createdBy, taskThreadMessage.createdBy) && Objects.equals(createdDate, taskThreadMessage.createdDate) && Objects.equals(messageTo, taskThreadMessage.messageTo) && Objects.equals(message, taskThreadMessage.message) && Objects.equals(backlog, taskThreadMessage.backlog) && Objects.equals(taskIdentifier, taskThreadMessage.taskIdentifier);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, thread_id, createdBy, createdDate, messageTo, message, backlog);
+        return Objects.hash(id, taskSequence, createdBy, createdDate, messageTo, message, backlog, taskIdentifier);
     }
 
     @Override
     public String toString() {
         return "{" +
             " id='" + getId() + "'" +
-            ", thread_id='" + getThread_id() + "'" +
+            ", taskSequence='" + getTaskSequence() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +
             ", messageTo='" + getMessageTo() + "'" +
             ", message='" + getMessage() + "'" +
             ", backlog='" + getBacklog() + "'" +
+            ", taskIdentifier='" + getTaskIdentifier() + "'" +
             "}";
     }
+    
     
 }

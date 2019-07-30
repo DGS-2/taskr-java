@@ -25,9 +25,10 @@ public class TaskWorkflowState {
     @Column(name = "id")
     private String id; 
 
-    @ManyToOne
-    private TaskWorkflowHistory workflow_id;
+    @Column(updatable = false)
+    private String taskSequence;
 
+    // Status of workflow
     private String state;
 
     private Integer percentComplete;
@@ -41,18 +42,21 @@ public class TaskWorkflowState {
     @JsonIgnore
     private TaskBacklog backlog;
 
+    private String taskIdentifier;
+
 
     public TaskWorkflowState() {
     }
 
-    public TaskWorkflowState(String id, TaskWorkflowHistory workflow_id, String state, Integer percentComplete, Boolean is_approval_required, String approver_id, TaskBacklog backlog) {
+    public TaskWorkflowState(String id, String taskSequence, String state, Integer percentComplete, Boolean is_approval_required, String approver_id, TaskBacklog backlog, String taskIdentifier) {
         this.id = id;
-        this.workflow_id = workflow_id;
+        this.taskSequence = taskSequence;
         this.state = state;
         this.percentComplete = percentComplete;
         this.is_approval_required = is_approval_required;
         this.approver_id = approver_id;
         this.backlog = backlog;
+        this.taskIdentifier = taskIdentifier;
     }
 
     public String getId() {
@@ -63,12 +67,12 @@ public class TaskWorkflowState {
         this.id = id;
     }
 
-    public TaskWorkflowHistory getWorkflow_id() {
-        return this.workflow_id;
+    public String getTaskSequence() {
+        return this.taskSequence;
     }
 
-    public void setWorkflow_id(TaskWorkflowHistory workflow_id) {
-        this.workflow_id = workflow_id;
+    public void setTaskSequence(String taskSequence) {
+        this.taskSequence = taskSequence;
     }
 
     public String getState() {
@@ -115,13 +119,21 @@ public class TaskWorkflowState {
         this.backlog = backlog;
     }
 
+    public String getTaskIdentifier() {
+        return this.taskIdentifier;
+    }
+
+    public void setTaskIdentifier(String taskIdentifier) {
+        this.taskIdentifier = taskIdentifier;
+    }
+
     public TaskWorkflowState id(String id) {
         this.id = id;
         return this;
     }
 
-    public TaskWorkflowState workflow_id(TaskWorkflowHistory workflow_id) {
-        this.workflow_id = workflow_id;
+    public TaskWorkflowState taskSequence(String taskSequence) {
+        this.taskSequence = taskSequence;
         return this;
     }
 
@@ -150,6 +162,11 @@ public class TaskWorkflowState {
         return this;
     }
 
+    public TaskWorkflowState taskIdentifier(String taskIdentifier) {
+        this.taskIdentifier = taskIdentifier;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -158,24 +175,25 @@ public class TaskWorkflowState {
             return false;
         }
         TaskWorkflowState taskWorkflowState = (TaskWorkflowState) o;
-        return Objects.equals(id, taskWorkflowState.id) && Objects.equals(workflow_id, taskWorkflowState.workflow_id) && Objects.equals(state, taskWorkflowState.state) && Objects.equals(percentComplete, taskWorkflowState.percentComplete) && Objects.equals(is_approval_required, taskWorkflowState.is_approval_required) && Objects.equals(approver_id, taskWorkflowState.approver_id) && Objects.equals(backlog, taskWorkflowState.backlog);
+        return Objects.equals(id, taskWorkflowState.id) && Objects.equals(taskSequence, taskWorkflowState.taskSequence) && Objects.equals(state, taskWorkflowState.state) && Objects.equals(percentComplete, taskWorkflowState.percentComplete) && Objects.equals(is_approval_required, taskWorkflowState.is_approval_required) && Objects.equals(approver_id, taskWorkflowState.approver_id) && Objects.equals(backlog, taskWorkflowState.backlog) && Objects.equals(taskIdentifier, taskWorkflowState.taskIdentifier);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, workflow_id, state, percentComplete, is_approval_required, approver_id, backlog);
+        return Objects.hash(id, taskSequence, state, percentComplete, is_approval_required, approver_id, backlog, taskIdentifier);
     }
 
     @Override
     public String toString() {
         return "{" +
             " id='" + getId() + "'" +
-            ", workflow_id='" + getWorkflow_id() + "'" +
+            ", taskSequence='" + getTaskSequence() + "'" +
             ", state='" + getState() + "'" +
             ", percentComplete='" + getPercentComplete() + "'" +
             ", is_approval_required='" + isIs_approval_required() + "'" +
             ", approver_id='" + getApprover_id() + "'" +
             ", backlog='" + getBacklog() + "'" +
+            ", taskIdentifier='" + getTaskIdentifier() + "'" +
             "}";
     }
     

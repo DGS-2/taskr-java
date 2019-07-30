@@ -63,16 +63,6 @@ public class Task {
 
     private Integer priority;
 
-    // A task may only have one thread
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "task_thread_id", referencedColumnName = "id")
-    private TaskThread messageThread; 
-
-    // A task may have only one workflow
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "workflow_task_id", referencedColumnName = "id")
-    private TaskWorkflow taskWorkflow;
-
     //ManyToOne with Backlog
     @Column(updatable = false)
     private String taskIdentifier;
@@ -92,11 +82,10 @@ public class Task {
     }
 
 
-
     public Task() {
     }
 
-    public Task(String id, TaskClassification classification, String title, String description, Date createdDate, Date updatedAt, Date dueDate, String createdBy, String assignedTo, String parentTask, Integer priority, TaskThread messageThread, TaskWorkflow taskWorkflow, String taskIdentifier, TaskBacklog backlog) {
+    public Task(String id, TaskClassification classification, String title, String description, Date createdDate, Date updatedAt, Date dueDate, String createdBy, String assignedTo, String parentTask, Integer priority, String taskIdentifier, TaskBacklog backlog) {
         this.id = id;
         this.classification = classification;
         this.title = title;
@@ -108,8 +97,6 @@ public class Task {
         this.assignedTo = assignedTo;
         this.parentTask = parentTask;
         this.priority = priority;
-        this.messageThread = messageThread;
-        this.taskWorkflow = taskWorkflow;
         this.taskIdentifier = taskIdentifier;
         this.backlog = backlog;
     }
@@ -202,22 +189,6 @@ public class Task {
         this.priority = priority;
     }
 
-    public TaskThread getMessageThread() {
-        return this.messageThread;
-    }
-
-    public void setMessageThread(TaskThread messageThread) {
-        this.messageThread = messageThread;
-    }
-
-    public TaskWorkflow getTaskWorkflow() {
-        return this.taskWorkflow;
-    }
-
-    public void setTaskWorkflow(TaskWorkflow taskWorkflow) {
-        this.taskWorkflow = taskWorkflow;
-    }
-
     public String getTaskIdentifier() {
         return this.taskIdentifier;
     }
@@ -289,16 +260,6 @@ public class Task {
         return this;
     }
 
-    public Task messageThread(TaskThread messageThread) {
-        this.messageThread = messageThread;
-        return this;
-    }
-
-    public Task taskWorkflow(TaskWorkflow taskWorkflow) {
-        this.taskWorkflow = taskWorkflow;
-        return this;
-    }
-
     public Task taskIdentifier(String taskIdentifier) {
         this.taskIdentifier = taskIdentifier;
         return this;
@@ -317,12 +278,12 @@ public class Task {
             return false;
         }
         Task task = (Task) o;
-        return Objects.equals(id, task.id) && Objects.equals(classification, task.classification) && Objects.equals(title, task.title) && Objects.equals(description, task.description) && Objects.equals(createdDate, task.createdDate) && Objects.equals(updatedAt, task.updatedAt) && Objects.equals(dueDate, task.dueDate) && Objects.equals(createdBy, task.createdBy) && Objects.equals(assignedTo, task.assignedTo) && Objects.equals(parentTask, task.parentTask) && Objects.equals(priority, task.priority) && Objects.equals(messageThread, task.messageThread) && Objects.equals(taskWorkflow, task.taskWorkflow) && Objects.equals(taskIdentifier, task.taskIdentifier) && Objects.equals(backlog, task.backlog);
+        return Objects.equals(id, task.id) && Objects.equals(classification, task.classification) && Objects.equals(title, task.title) && Objects.equals(description, task.description) && Objects.equals(createdDate, task.createdDate) && Objects.equals(updatedAt, task.updatedAt) && Objects.equals(dueDate, task.dueDate) && Objects.equals(createdBy, task.createdBy) && Objects.equals(assignedTo, task.assignedTo) && Objects.equals(parentTask, task.parentTask) && Objects.equals(priority, task.priority) && Objects.equals(taskIdentifier, task.taskIdentifier) && Objects.equals(backlog, task.backlog);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, classification, title, description, createdDate, updatedAt, dueDate, createdBy, assignedTo, parentTask, priority, messageThread, taskWorkflow, taskIdentifier, backlog);
+        return Objects.hash(id, classification, title, description, createdDate, updatedAt, dueDate, createdBy, assignedTo, parentTask, priority, taskIdentifier, backlog);
     }
 
     @Override
@@ -339,11 +300,9 @@ public class Task {
             ", assignedTo='" + getAssignedTo() + "'" +
             ", parentTask='" + getParentTask() + "'" +
             ", priority='" + getPriority() + "'" +
-            ", messageThread='" + getMessageThread() + "'" +
-            ", taskWorkflow='" + getTaskWorkflow() + "'" +
             ", taskIdentifier='" + getTaskIdentifier() + "'" +
             ", backlog='" + getBacklog() + "'" +
             "}";
     }
-    
+
 }

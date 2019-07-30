@@ -38,11 +38,11 @@ public class TaskBacklog {
     
     // Here we will store the backlog of each message in the message thread
     //OneToMany 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "backlog")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "backlog")
     private List<TaskThreadMessage> messageThread = new ArrayList<>();
 
     // Here we will store the backlog of each workflow update
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "backlog")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "backlog")
     private List<TaskWorkflowState> workflowState = new ArrayList<>();
 
 
