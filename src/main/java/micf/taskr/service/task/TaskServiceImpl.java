@@ -43,4 +43,12 @@ public class TaskServiceImpl implements TaskService {
 
         return task;
     }
+
+    public void deleteTaskById(String id) {
+        Task task = taskRepository.findById(id);
+
+        if(task == null) throw new TaskTitleException("Cannot delete Task with id: '" + id + "'. Task does not exist");
+
+        taskRepository.delete(task);
+    }
 }

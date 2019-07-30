@@ -46,13 +46,13 @@ public class TaskRestController {
     // Get task by id
     @GetMapping("/task/{id}")
     public Task getTask(@PathVariable String id) {
-        Task theTask = taskService.findById(id);
+        Task task = taskService.findById(id);
         
-        if(theTask == null) {
+        if(task == null) {
             throw new RuntimeException("Task id not found - " + id);
         }
 
-        return theTask;
+        return task;
     }
 
     // Get all tasks
@@ -61,7 +61,13 @@ public class TaskRestController {
         return taskService.findAll();
     }
 
-    // Delete Task
+    // Delete/Archive Task
+    @DeleteMapping("/delete-task/{id}")
+    public ResponseEntity<?> deleteTask(@PathVariable String id) {
+        taskService.deleteTaskById(id);
+
+        return new ResponseEntity<String>("Task with '" + id + "' was deleted.", HttpStatus.OK);
+    }
 
     // Update Task
     
