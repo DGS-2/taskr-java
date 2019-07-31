@@ -1,6 +1,11 @@
 /.gradle/
-/.settings/
+/bin/
+/.settings
 !gradle/wrapper/gradle-wrapper.jar
+/build/
+
+### VSCODE ###
+/.vscode
 
 ### STS ###
 .apt_generated
