@@ -3,24 +3,23 @@ package micf.taskr.exception.login;
 import java.util.Objects;
 
 public class InvalidLoginResponse {
-    private String username;
-    private String password;
-
+    private String email;
+    private String password; 
 
     public InvalidLoginResponse() {
     }
 
-    public InvalidLoginResponse(String username, String password) {
-        this.username = username;
-        this.password = password;
+    public InvalidLoginResponse(String email, String password) {
+        this.email = "Invalid Email";
+        this.password = "Invalid Password";
     }
 
-    public String getUsername() {
-        return this.username;
+    public String getEmail() {
+        return this.email;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
@@ -31,8 +30,8 @@ public class InvalidLoginResponse {
         this.password = password;
     }
 
-    public InvalidLoginResponse username(String username) {
-        this.username = username;
+    public InvalidLoginResponse email(String email) {
+        this.email = email;
         return this;
     }
 
@@ -49,20 +48,21 @@ public class InvalidLoginResponse {
             return false;
         }
         InvalidLoginResponse invalidLoginResponse = (InvalidLoginResponse) o;
-        return Objects.equals(username, invalidLoginResponse.username) && Objects.equals(password, invalidLoginResponse.password);
+        return Objects.equals(email, invalidLoginResponse.email) && Objects.equals(password, invalidLoginResponse.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(username, password);
+        return Objects.hash(email, password);
     }
 
     @Override
     public String toString() {
         return "{" +
-            " username='" + getUsername() + "'" +
+            " email='" + getEmail() + "'" +
             ", password='" + getPassword() + "'" +
             "}";
     }
+    
     
 }

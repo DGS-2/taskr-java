@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import micf.taskr.exception.register.EmailExistsException;
+import micf.taskr.exception.register.EmailExistsResponse;
 import micf.taskr.exception.task.TaskNotFoundException;
 import micf.taskr.exception.task.TaskNotFoundExceptionResponse;
 import micf.taskr.exception.task.TaskTitleException;
@@ -27,6 +29,13 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
     @ExceptionHandler
     public final ResponseEntity<Object> handleTaskNotFoundException(TaskNotFoundException ex, WebRequest request) {
         TaskNotFoundExceptionResponse exceptionResponse = new TaskNotFoundExceptionResponse(ex.getMessage());
+
+        return new ResponseEntity<Object>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public final ResponseEntity<Object> handleEmailExistsException(EmailExistsException ex, WebRequest request) {
+        EmailExistsResponse exceptionResponse = new EmailExistsResponse(ex.getMessage());
 
         return new ResponseEntity<Object>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
