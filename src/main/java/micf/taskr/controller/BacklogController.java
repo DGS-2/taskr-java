@@ -7,7 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -58,6 +60,30 @@ public class BacklogController {
         return taskWorkflowServiceImpl.findByBacklogId(backlog_id);
     }
 
+    @GetMapping("/get-task-workflow-item/{backlog_id}/{workflow_id}")
+    public ResponseEntity<?> getTaskWorkflowItem(@PathVariable String backlog_id, @PathVariable String workflow_id) {
+        TaskWorkflowState state = taskWorkflowServiceImpl.findWorkflowBySequence(backlog_id, workflow_id);
+
+        return new ResponseEntity<TaskWorkflowState>(state, HttpStatus.OK);
+    }
+
+    @PatchMapping("/update-task-workflow-item/{backlog_id}/{workflow_id}")
+    public ResponseEntity<?> updateTaskWorkflowItem(@PathVariable String backlog_id, @PathVariable String workflow_id, @Valid @RequestBody TaskWorkflowState updatedState, BindingResult result){
+        ResponseEntity<?> errorMap = mapValidationError.MapValidationErrors(result);
+        if(errorMap != null) return errorMap;
+
+        TaskWorkflowState state = taskWorkflowServiceImpl.updateWorkflowBySequence(updatedState, backlog_id, workflow_id);
+
+        return new ResponseEntity<TaskWorkflowState>(state, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete-task-workflow-item/{backlog_id}/{workflow_id}")
+    public ResponseEntity<?> deteleTaskWorkflowItem(@PathVariable String backlog_id, @PathVariable String workflow_id){
+        taskWorkflowServiceImpl.deleteWorkflowBySeuqence(backlog_id, workflow_id);
+
+        return new ResponseEntity<String>("Workflow item '" + workflow_id + "' was deleted.", HttpStatus.OK);
+    }
+
     // Message Thread routes
 
     @PostMapping("/update-backlog-message/{backlog_id}")
@@ -75,4 +101,29 @@ public class BacklogController {
     public Iterable<TaskThreadMessage> getTaskMessages(@PathVariable String backlog_id) {
         return taskMessageServiceImpl.findByBacklogId(backlog_id);
     }
+
+    @GetMapping("/get-task-message/{backlog_id}/{message_id}")
+    public ResponseEntity<?> getTaskMessage(@PathVariable String backlog_id, @PathVariable String message_id) {
+        TaskThreadMessage message = taskMessageServiceImpl.findMessageBySequence(backlog_id, message_id);
+
+        return new ResponseEntity<TaskThreadMessage>(message, HttpStatus.OK);
+    }
+
+    @PatchMapping("/update-task-message/{backlog_id}/{message_id}")
+    public ResponseEntity<?> updateTaskMessage(@PathVariable String backlog_id, @PathVariable String message_id, @Valid @RequestBody TaskThreadMessage updatedMessage, BindingResult result) {
+        ResponseEntity<?> errorMap = mapValidationError.MapValidationErrors(result);
+        if(errorMap != null) return errorMap;
+
+        TaskThreadMessage message = taskMessageServiceImpl.updateMessageBySequence(updatedMessage, backlog_id, message_id);
+
+        return new ResponseEntity<TaskThreadMessage>(message, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete-task-message/{backlog_id}/{message_id}")
+    public ResponseEntity<?> deleteTaskMessage(@PathVariable String backlog_id, @PathVariable String message_id){
+        taskMessageServiceImpl.deleteMessageBySequence(backlog_id, message_id);
+
+        return new ResponseEntity<String>("Message: '" + message_id + "' was deleted.", HttpStatus.OK);
+    }
+
 }

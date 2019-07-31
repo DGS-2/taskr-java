@@ -11,4 +11,6 @@ import micf.taskr.domain.task.TaskWorkflowState;
 public interface TaskWorkflowStateRepository extends JpaRepository<TaskWorkflowState, Long> {
     
     List<TaskWorkflowState> findByTaskIdentifier(String taskIdentifier);
+
+    TaskWorkflowState findByTaskSequence(String taskSequence);
 }

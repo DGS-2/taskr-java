@@ -11,4 +11,8 @@ import micf.taskr.domain.task.TaskThreadMessage;
 public interface TaskThreadMessageRepository extends JpaRepository<TaskThreadMessage, Long> {
 
     List<TaskThreadMessage> findByTaskIdentifier(String taskIdentifier);
+
+    TaskThreadMessage findByTaskSequence(String taskSequence);
+
+
 }

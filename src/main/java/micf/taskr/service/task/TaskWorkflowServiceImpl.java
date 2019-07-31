@@ -47,7 +47,7 @@ public class TaskWorkflowServiceImpl implements TaskWorkflowService {
                 workflow.setState("WAITING_USER_ACTION");
             }
         } catch(Exception e) {
-            throw new TaskNotFoundException("Project not found.");
+            throw new TaskNotFoundException("Task not found.");
         }
 
         return null;
@@ -57,5 +57,32 @@ public class TaskWorkflowServiceImpl implements TaskWorkflowService {
 		return taskWorkflowStateRepository.findByTaskIdentifier(backlog_id);
 	}
 
-    
+    public TaskWorkflowState findWorkflowBySequence(String backlog_id, String workflow_id) {
+        
+        TaskBacklog backlog = taskBacklogRepository.findByTaskIdentifier(backlog_id);
+
+        if(backlog == null) throw new TaskNotFoundException("Task not found.");
+
+        TaskWorkflowState state = taskWorkflowStateRepository.findByTaskSequence(workflow_id);
+        
+        if(state == null) throw new TaskNotFoundException("Task not found.");
+
+        if(!state.getTaskIdentifier().equals(backlog_id)) throw new TaskNotFoundException("Task not found.");
+
+        return state;
+    }
+
+    public TaskWorkflowState updateWorkflowBySequence(TaskWorkflowState updatedState, String backlog_id, String workflow_id){
+        TaskWorkflowState state = findWorkflowBySequence(backlog_id, workflow_id);
+
+        state = updatedState;
+
+        return taskWorkflowStateRepository.save(state);
+    }
+
+    public void deleteWorkflowBySeuqence(String backlog_id, String workflow_id) {
+        TaskWorkflowState state = findWorkflowBySequence(backlog_id, workflow_id);
+
+        taskWorkflowStateRepository.delete(state);
+    }
 }

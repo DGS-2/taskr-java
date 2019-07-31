@@ -37,7 +37,7 @@ public class TaskWorkflowState {
 
     private String approver_id;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "task_backlog_id", updatable = false, nullable = false)
     @JsonIgnore
     private TaskBacklog backlog;

@@ -62,5 +62,33 @@ public class TaskMessageServiceImpl implements TaskMessageService {
         return taskThreadMessageRepository.findByTaskIdentifier(id);
     }
 
-    
+    public TaskThreadMessage findMessageBySequence(String backlog_id, String message_id) {
+
+        // Search the correct backlog
+        TaskBacklog backlog = taskBacklogRepository.findByTaskIdentifier(backlog_id);
+
+        if(backlog == null) throw new TaskNotFoundException("Backlog with ID: '" + backlog_id + "' not found.");
+
+        TaskThreadMessage message = taskThreadMessageRepository.findByTaskSequence(message_id);
+
+        if(message == null) throw new TaskNotFoundException("Message with ID: '" + message_id + "' not found.");
+
+        if(!message.getTaskIdentifier().equals(backlog_id)) throw new TaskNotFoundException("Message with ID: '" + message_id + "' does not exists in task '" + backlog_id + "'.");
+
+        return message;
+    }
+
+    public TaskThreadMessage updateMessageBySequence(TaskThreadMessage updatedMessage, String backlog_id, String message_id) {
+        TaskThreadMessage message = findMessageBySequence(backlog_id, message_id);
+
+        message = updatedMessage;
+
+        return taskThreadMessageRepository.save(message);
+    }
+
+    public void deleteMessageBySequence(String backlog_id, String message_id){
+        TaskThreadMessage message = findMessageBySequence(backlog_id, message_id);
+
+        taskThreadMessageRepository.delete(message);
+    }
 }
