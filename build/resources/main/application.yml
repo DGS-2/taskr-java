@@ -1,7 +1,9 @@
 spring:
+    profiles:
+        active: spring.profiles.dev
     datasource:
-        platform: postres
-        url: jdbc:postgresql://127.0.0.1:52027/taskr
+        platform: postgres
+        url: jdbc:postgresql://127.0.0.1:5432/taskr
         username: taskr
         password: taskr
     thymeleaf:
@@ -16,5 +18,22 @@ spring:
         excluded-view-names: index.html
         servlet:
             content-type: text/html
-server:
-  port: 8443
+    security:
+        user:
+            name: taskr
+            password: taskr
+    jpa:
+        show-sql: true
+        hibernate:
+            ddl-auto: update
+        properties:
+            hibernate:
+                temp: 
+                    use_jdbc_metadata_defaults: false
+                dialect: org.hibernate.dialect.PostgreSQLDialect
+                jdbc:
+                    lob:
+                        non_contextual_creation: true
+# server:
+#   address: 127.0.0.1
+#   port: 8080
