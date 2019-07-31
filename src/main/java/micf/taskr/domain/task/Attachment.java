@@ -1,6 +1,6 @@
 package micf.taskr.domain.task;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+// import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedBy;
@@ -10,8 +10,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+// import javax.persistence.JoinColumn;
+// import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 
 import java.util.Date;
