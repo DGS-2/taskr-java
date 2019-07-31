@@ -1,0 +1,42 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+/public/vendor
+/src/assets/styles
+
+### Unused components that may be useful on local ###
+/src/components/admin
+/src/components/auth
+/src/components/calendar
+/src/components/dashboard
+/src/components/layout
+/src/components/no-profile
+/src/components/profile
+/src/components/profiles
+/src/components/shared
+/src/components/sub-task
+/src/components/sub-tasks
+/src/components/task
+/src/components/tasks
+/src/components/team
+/src/components/teams
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+package-lock.json
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
