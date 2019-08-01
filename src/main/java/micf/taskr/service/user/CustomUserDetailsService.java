@@ -71,10 +71,14 @@ public class CustomUserDetailsService implements UserDetailsService {
         return authorities;
     }
     
-    // public User loadUserById(Long id){
-    //     User user = userRepository.getById(id);
-    //     if(user==null) new UsernameNotFoundException("User not found");
-    //     return user;
+    public User loadUserById(Long id){
+        String userId = Long.toString(id);
 
-    // }
+        User user = userRepository.findById(userId);
+
+        if(user == null) new UsernameNotFoundException("User not found");
+
+        return user;
+
+    }
 }
