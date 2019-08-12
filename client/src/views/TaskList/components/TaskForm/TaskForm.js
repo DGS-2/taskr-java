@@ -7,17 +7,20 @@ import compose from 'recompose/compose';
 // Actions
 import { addTask } from "../../../../actions/taskActions";
 
+import Button from '@material-ui/core/Button';
+import Stepper from '@material-ui/core/Stepper';
+import Step from '@material-ui/core/Step';
+import StepLabel from '@material-ui/core/StepLabel';
+import Typography from '@material-ui/core/Typography';
 
 // Material Helpers
 import { withStyles } from '@material-ui/core';
 
-import { Button } from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
-
-import { WithContext as ReactTags } from 'react-tag-input';
-import DatePicker from 'react-date-picker';
-import { delimiters, priorityOptions } from "../../../../const/consts";
 import { filterUsers } from "../../../../functions/functions";
+
+import Workflow from './components/workflow/Workflow';
+import PunchList from './components/punch-list/PunchList';
+import TaskLabeling from './components/labeling/TaskLabeling';
 
 // Component styles
 import styles from './styles';
@@ -34,20 +37,14 @@ class TaskForm extends Component {
     constructor(props){
         super(props)    
         this.state = {
-          title: '',
-          description: '',
-          classification: '',
-          due: new Date(),
-          to: '',
-          from: '',
-          message: '',
-          tags: '',
-          priority: '',
           errors: {},
           taggableUsers: [],
           suggestions: [],
           files: [],
-          parent: ''
+          parent: '',
+          activeStep: 0,
+          currentWorkflow: [],
+          tags: []
         }
       }
     
@@ -57,76 +54,72 @@ class TaskForm extends Component {
         }
       }
     
-      handleDelete = i => {
-        const { taggableUsers } = this.state;
-        this.setState({
-          taggableUsers: taggableUsers.filter((tag, index) => index !== i),
-        });
-      }
-    
-      handleAddition = tag => {
-          this.setState(state => ({ taggableUsers: [...state.taggableUsers, tag] }));
-      }
-    
-      setDueDate = date => {
-        this.setState({due: date})
-      }
-    
-      onChange = e => {
-        this.setState({[e.target.name]: e.target.value})
-      } 
-    
       onSubmit = e => {
-        const { taggableUsers } = this.state;
-        const { profile } = this.props;
-        e.preventDefault();
-        taggableUsers.forEach(user => {
-          let to = profile.profiles.filter(u => u.user._id === user.id)[0];
-          this.buildTask(to.user);
-        })    
+        e.preventDefault();   
       }
     
       buildTask = user => {
-        const { profile } = this.props;
-        let taskCreator = profile.profile.user._id;
-        const newTask = {
-          classification: this.state.classification,
-          title: this.state.title,
-          description: this.state.description,
-          files: this.state.files,
-          createdOn: new Date,
-          dueBy: this.state.due,
-          createdBy: taskCreator,
-          assignedTo: user._id,
-          parentTask: this.state.parent,
-          message: {
-            date: new Date,
-            to: user._id,
-            from: taskCreator,
-            message: this.state.message
-          },
-          priority: this.state.priority
-        }
-        console.log(newTask);
-        this.props.addTask(newTask, this.props.history);
+        // const { profile } = this.props;
+        // let taskCreator = profile.profile.user._id;
+        // const newTask = {
+        //   classification: this.state.classification,
+        //   title: this.state.title,
+        //   description: this.state.description,
+        //   files: this.state.files,
+        //   createdOn: new Date(),
+        //   dueBy: this.state.due,
+        //   createdBy: taskCreator,
+        //   assignedTo: user._id,
+        //   parentTask: this.state.parent,
+        //   priority: this.state.priority
+        // }
+        console.log(this.state);
+        // this.props.addTask(newTask, this.props.history);
       }
 
-      filterUsers = users => {
-        let arr = [];
-        users.forEach(user => {
-          let item = {id: user.user._id, text: `${user.rank.abreviated} ${user.user.name}`};
-          arr.push(item);
-        });
+      handleNext = () => {
+        this.setState({activeStep: this.state.activeStep + 1});
+      }
+    
+      handleBack = () => {
+          this.setState({activeStep: this.state.activeStep - 1});
+      }
+      
+      handleReset = () => {
+          this.setState({activeStep: 0});
+      }
 
-        return arr;
+      updateWorkflow = arr => {
+        this.setState({currentWorkflow : arr});
+      }
+
+      labelTask = arr => {
+        this.setState({tags: arr}, console.log(this.state.tags));
+      }
+
+      getSteps = () => {
+        return ['Define a workflow', 'Add a checklist', 'Help us label this workflow', 'Let\'s review and save'];
+      }
+      
+      getStepContent = step => {
+        switch (step) {
+          case 0:
+            return 'Attach a workflow or build a new one.';
+          case 1:
+            return 'Add checklist items for this task.';
+          case 2:
+            return 'Add labels to this workflow.';
+          case 3:
+            return 'Review the task and save';
+          default:
+            return 'Unknown step';
+        }
       }
 
       render() {
-        const { taggableUsers } = this.state
-        
-        const { classes, profile } = this.props;
-
-        const suggestions = this.filterUsers(profile.profiles);
+        const { classes } = this.props;
+        const { activeStep } = this.state;
+        const steps = this.getSteps();
 
         return (
           <form
@@ -137,129 +130,64 @@ class TaskForm extends Component {
             <Portlet>
               <PortletHeader>
                 <PortletLabel
-                  subtitle="Create your task and assign it"
-                  title="Create"
+                  title="Create a new workflow"
                 />
               </PortletHeader>              
               <PortletContent noPadding>
-                <div className={classes.field}>
-                      <TextField 
-                          className={classes.textField}
-                          helperText="Please apply the proper classification for this task"
-                          label="Task classification"
-                          margin="dense"
-                          required
-                          fullWidth
-                          value={this.state.classification}
-                          variant="outlined"
-                          name="classification"
-                          onChange={this.onChange}
-                      />
-                  </div>
-                <div className={classes.field}>
-                  <TextField
-                      className={classes.textField}
-                      helperText="Please assign a title to this task"
-                      label="Task name"
-                      margin="dense"
-                      required
-                      fullWidth
-                      value={this.state.title}
-                      variant="outlined"
-                      name="title"
-                      onChange={this.onChange}
-                    />
-                </div>
-                <div className={classes.field}>
-                  <TextField
-                    className={classes.textField}
-                    label="Task description"
-                    margin="dense"
-                    required
-                    multiline
-                    fullWidth
-                    value={this.state.description}
-                    variant="outlined"
-                    name="description"
-                    onChange={this.onChange}
-                  />
-                </div>
-                <div className={classes.field}>
-                  <TextField 
-                    name="message"
-                    value={this.state.message}
-                    fullWidth
-                    multiline
-                    margin="dense"
-                    label="Start message thread"
-                    variant="outlined"
-                    className={classes.textField}
-                    onChange={this.onChange}
-                  />
-                </div>
-                <div className={classes.field}>
-                  <TextField
-                      className={classes.textField}
-                      label="Select a Priority"
-                      margin="dense"
-                      name="priority"
-                      onChange={this.onChange}
-                      required
-                      select
-                      SelectProps={{ native: true }}
-                      value={this.state.priority}
-                      variant="outlined">
-                      {priorityOptions.map(option => (
-                      <option
-                          key={option.value}
-                          value={option.value}
-                      >
-                          {option.label}
-                      </option>
-                      ))}
-                  </TextField>
-                </div>
-                <div className={classes.field}>                   
-                  <ReactTags 
-                      name="to"
-                      placeholder="Start typing to assign task to members"              
-                      inputFieldPosition="inline"
-                      tags={taggableUsers}
-                      suggestions={suggestions}
-                      handleDelete={this.handleDelete}
-                      handleAddition={this.handleAddition}
-                      delimiters={delimiters}
-                      autocomplete={true}
-                      autofocus={false}
-                      minQueryLength={1}
-                      classNames={{
-                        tags: classes.ReactTags__tags,
-                        tagInput: classes.ReactTags__tagInput,
-                        tagInputField: classes.ReactTags__tagInputField,
-                        selected: classes.ReactTags__selected,
-                        tag: classes.ReactTags__selected,
-                        remove: classes.ReactTags__selected,
-                        suggestions: classes.ReactTags__suggestions
-                      }}
-                  />                    
-                </div>
-                <div className={classes.field}>
-                  <DatePicker
-                      onChange={this.setDueDate}
-                      value={this.state.due}
-                      className="form-controlnodemon"
-                  />
-                </div>
+                <Stepper activeStep={activeStep}>
+                    {steps.map((label, i) => {
+                        return (
+                            <Step key={i}>
+                                <StepLabel>{label}</StepLabel>
+                            </Step>
+                        )
+                    })}
+                </Stepper>
+                <div>
+                  {activeStep === steps.length ? (
+                      <div>
+                          <Typography className={classes.instructions}>
+                              All steps completed - you&apos;re finished
+                          </Typography>
+                          <Button onClick={this.handleReset} className={classes.button}>
+                              Reset
+                          </Button>
+                      </div>
+                  ) : (
+                      <div>
+                          <Typography className={classes.instructions}>{this.getStepContent(activeStep)}</Typography>
+                          <div className={classes.formHolder}>
+                              {activeStep === 0 && (
+                                  <div><Workflow classes={classes} updateWorkflow={this.updateWorkflow} currentWorkflow={this.state.currentWorkflow} /></div>
+                              )}
+                              {activeStep === 1 && (
+                                  <PunchList classes={classes} currentWorkflow={this.state.currentWorkflow} />
+                              )}
+                              {activeStep === 2 && (
+                                <TaskLabeling classes={classes} addLabelsToTask={this.labelTask} labels={this.state.tags} />
+                              )}
+                              {activeStep === 3 && (
+                                <div>Review and Save</div>
+                              )}
+                          </div>
+                          <div className={classes.stepButtons}>
+                          <Button disabled={activeStep === 0} onClick={this.handleBack} className={classes.button}>
+                              Back
+                          </Button>
+                          <Button
+                              variant="contained"
+                              color="primary"
+                              onClick={activeStep === steps.length - 1 ? this.buildTask : this.handleNext}
+                              className={classes.button}
+                          >
+                              {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                          </Button>
+                          </div>
+                      </div>
+                  )}
+              </div>
               </PortletContent>
-              <PortletFooter className={classes.portletFooter}>
-                <Button
-                  color="primary"
-                  variant="contained"
-                  type="submit"
-                >
-                  Create Task
-                </Button>
-              </PortletFooter>            
+              <PortletFooter className={classes.portletFooter}><PortletLabel title="In progress" /></PortletFooter>            
             </Portlet>
           </form>
         );

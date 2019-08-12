@@ -16,5 +16,8 @@ export default theme => ({
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'flex-end'
+    },
+    marginYCentered: {
+      margin: '.5rem auto !important'
     }
   });

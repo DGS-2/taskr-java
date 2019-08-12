@@ -1,5 +1,5 @@
 export default {
-    email: {
+    username: {
       presence: { allowEmpty: false, message: 'is required' },
       email: true,
       length: {

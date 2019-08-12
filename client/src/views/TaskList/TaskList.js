@@ -177,6 +177,7 @@ class TaskList extends Component {
       <DashboardLayout title="Tasks">
         <div className={classes.root}>
           <TasksToolbar toggleForm={this.toggleForm} />
+          {/* Change to modal */}
           <div className={classes.content}>{ this.state.isFormOpen ? <TaskForm /> : null }</div>
           <div className={classes.content}>{this.renderTasks()}</div>
           <div className={classes.pagination}>

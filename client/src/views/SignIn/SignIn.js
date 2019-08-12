@@ -45,15 +45,15 @@ const signIn = () => {
 class SignIn extends Component {
   state = {
     values: {
-      email: '',
+      username: '',
       password: ''
     },
     touched: {
-      email: false,
+      username: false,
       password: false
     },
     errors: {
-      email: null,
+      username: null,
       password: null
     },
     isValid: false,
@@ -102,7 +102,7 @@ class SignIn extends Component {
 
       this.setState({ isLoading: true });
       
-      await signIn(this.props.loginUser({email: values.email, password: values.password}));
+      await signIn(this.props.loginUser({username: values.username, password: values.password}));
 
       // localStorage.setItem('isAuthenticated', true);
       if(auth.user.isToken) history.push('/change-password');
@@ -127,7 +127,7 @@ class SignIn extends Component {
       isLoading
     } = this.state;
 
-    const showEmailError = touched.email && errors.email;
+    const showUsernameError = touched.username && errors.username;
     const showPasswordError = touched.password && errors.password;
 
     return (
@@ -194,26 +194,26 @@ class SignIn extends Component {
                     className={classes.sugestion}
                     variant="body1"
                   >
-                    Login with email address
+                    Login with Email address
                   </Typography>
                   <div className={classes.fields}>
                     <TextField
                       className={classes.textField}
                       label="Email address"
-                      name="email"
+                      name="username"
                       onChange={event =>
-                        this.handleFieldChange('email', event.target.value)
+                        this.handleFieldChange('username', event.target.value)
                       }
                       type="text"
-                      value={values.email}
+                      value={values.username}
                       variant="outlined"
                     />
-                    {showEmailError && (
+                    {showUsernameError && (
                       <Typography
                         className={classes.fieldError}
                         variant="body2"
                       >
-                        {errors.email[0]}
+                        {errors.username[0]}
                       </Typography>
                     )}
                     <TextField

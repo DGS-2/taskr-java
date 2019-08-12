@@ -24,41 +24,46 @@ import static micf.taskr.config.SecurityConstraints.TOKEN_PREFIX;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
-    JwtTokenProvider tokenProvider;
+    private JwtTokenProvider tokenProvider;
 
     @Autowired
-    CustomUserDetailsService customeUserDetailsService;
+    private CustomUserDetailsService customUserDetailsService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+                                    FilterChain filterChain) throws ServletException, IOException {
+
         try {
-            String jwt = getJwtFromRequest(request);
-            
-            if(StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
-                Long userId = tokenProvider.getUserIdFromToken(jwt);
-                User userDetails = customeUserDetailsService.loadUserById(userId);
+
+            String jwt = getJWTFromRequest(httpServletRequest);
+
+            if(StringUtils.hasText(jwt)&& tokenProvider.validateToken(jwt)){
+                Long userId = tokenProvider.getUserIdFromJWT(jwt);
+                User userDetails = customUserDetailsService.loadUserById(userId);
 
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    userDetails, null, Collections.emptyList()
-                );
+                        userDetails, null, Collections.emptyList());
 
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+
             }
 
-        } catch (Exception e) {
-            logger.error("Could not set user authentication in a security context.", e);
+        }catch (Exception ex){
+            logger.error("Could not set user authentication in security context", ex);
         }
 
-        filterChain.doFilter(request, response);
+
+        filterChain.doFilter(httpServletRequest, httpServletResponse);
+
     }
 
-    private String getJwtFromRequest(HttpServletRequest request) {
+
+
+    private String getJWTFromRequest(HttpServletRequest request){
         String bearerToken = request.getHeader(HEADER_STRING);
 
-        if(StringUtils.hasText(bearerToken) && bearerToken.startsWith(TOKEN_PREFIX)) {
+        if(StringUtils.hasText(bearerToken)&&bearerToken.startsWith(TOKEN_PREFIX)){
             return bearerToken.substring(7, bearerToken.length());
         }
 

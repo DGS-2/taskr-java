@@ -59,7 +59,7 @@ class DashboardView extends Component {
               sm={12}
               xs={12}
             >
-              <Calendar className={classes.item} />
+              {/* <Calendar className={classes.item} /> */}
             </Grid>
           </Grid>
         </div>

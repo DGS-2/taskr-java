@@ -7,8 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import micf.taskr.domain.user.User;
-import micf.taskr.domain.user.UserDto;
-import micf.taskr.exception.register.EmailExistsException;
+import micf.taskr.exception.register.UsernameAlreadyExistsException;
 import micf.taskr.repository.user.UserRepository;
 
 @Service
@@ -17,54 +16,45 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
+
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public static final String TOKEN_INVALID = "invalidToken";
-    public static final String TOKEN_EXPIRED = "expired";
-    public static final String TOKEN_VALID = "valid";
+    public User saveUser (User newUser){
 
-    public static String APP_NAME = "Taskr";
+        try{
+            newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
+            //Username has to be unique (exception)
+            newUser.setUsername(newUser.getUsername());
+            // Make sure that password and confirmPassword match
+            // We don't persist or show the confirmPassword
+            newUser.setConfirmPassword("");
+            return userRepository.save(newUser);
 
-    @Override
-    public User saveUser(final UserDto userDto) {
-        if(emailExists(userDto.getEmail())) throw new EmailExistsException("Email '" + userDto.getEmail() + "' already exists.");
+        }catch (Exception e){
+            throw new UsernameAlreadyExistsException("Username '"+newUser.getUsername()+"' already exists");
+        }
 
-        final User user = new User();
-
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
-        user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
-        user.setEmail(userDto.getEmail());
-        user.setUsingLoginToken(userDto.getIsUsingLoginToken());
-        //user.setRoles(Arrays.asList(UserRoleRepository.findByName("ROLE_USER")));
-        return userRepository.save(user);
-        
-    }
-
-    private boolean emailExists(final String email) {
-        return userRepository.findByEmail(email) != null;
     }
 
     @Override
-    public User findUserByEmail(final String email) {
-        return userRepository.findByEmail(email);
+    public void saveRegisteredUser(User user) {
+
     }
 
     @Override
-    public Optional<User> getUserByID(final long id) {
-        return userRepository.findById(id);
+    public User findUserByEmail(String email) {
+        return null;
     }
 
     @Override
-    public void changeUserPassword(final User user, final String password) {
-        user.setPassword(bCryptPasswordEncoder.encode(password));
-        userRepository.save(user);
+    public Optional<User> getUserByID(long id) {
+        return null;
     }
 
     @Override
-    public void saveRegisteredUser(final User user) {
-        userRepository.save(user);
+    public void changeUserPassword(User user, String password) {
+
     }
 
 }

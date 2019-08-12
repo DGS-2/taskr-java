@@ -14,13 +14,16 @@ import { clearCurrentProfile } from "../../../../actions/profileActions";
 // Material helpers
 import { withStyles } from '@material-ui/core';
 
+import TaskForm from '../../../../views/TaskList/components/TaskForm/TaskForm';
+
 // Material components
 import {
   Badge,
   IconButton,
   Popover,
   Toolbar,
-  Typography
+  Typography,
+  Modal
 } from '@material-ui/core';
 
 // Material icons
@@ -28,7 +31,8 @@ import {
   Menu as MenuIcon,
   Close as CloseIcon,
   NotificationsOutlined as NotificationsIcon,
-  Input as InputIcon
+  Input as InputIcon,
+  NoteAdd as Note
 } from '@material-ui/icons';
 
 // Custom components
@@ -41,13 +45,14 @@ class Topbar extends Component {
   signal = true;
 
   state = {
-    notificationsEl: null
+    notificationsEl: null,
+    modalOpen: false,
   };
 
 
   componentDidMount() {
     this.signal = true;
-    this.props.getTasks()
+    this.props.getTasks();
   }
 
   componentWillUnmount() {
@@ -77,6 +82,14 @@ class Topbar extends Component {
     });
   };
 
+  handleOpenModal = () => {
+    this.setState({modalOpen: !this.state.modalOpen});
+  }
+
+  handleCloseModal = () => {
+    this.setState({modalOpen: !this.state.modalOpen});
+  }
+
   render() {
     const {
       classes,
@@ -85,7 +98,7 @@ class Topbar extends Component {
       isSidebarOpen,
       onToggleSidebar
     } = this.props;
-    const { notifications, notificationsEl } = this.state;
+    const { notifications, notificationsEl, modalOpen } = this.state;
 
     const rootClassName = classNames(classes.root, className);
     const showNotifications = Boolean(notificationsEl);
@@ -107,8 +120,14 @@ class Topbar extends Component {
             >
               {title}
             </Typography>
+            {/* <IconButton
+              className={classes.addWorkflowButton}
+              onClick={this.handleOpenModal}
+            >
+              <Note />
+            </IconButton> */}
             <IconButton
-              className={classes.notificationsButton}
+              className={classes.addWorkflowButton}
               onClick={this.handleShowNotifications}
             >
               <Badge
@@ -145,6 +164,18 @@ class Topbar extends Component {
             onSelect={this.handleCloseNotifications}
           />
         </Popover>
+        <Modal
+          aria-labelledby="simple-modal-title"
+          aria-describedby="simple-modal-description"
+          open={modalOpen}
+          onClose={this.handleCloseModal}
+          keepMounted={true}
+          style={{display:'flex',alignItems:'center',justifyContent:'center'}}
+        >
+          <div style={{top: '25%', margin: 'auto'}} className={classes.modal}>
+            <TaskForm />
+          </div>          
+        </Modal>
       </Fragment>
     );
   }

@@ -3,11 +3,11 @@ package micf.taskr.domain.task;
 import java.util.Date;
 import java.util.Objects;
 
-// import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -15,37 +15,38 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import org.hibernate.annotations.GenericGenerator;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
+import micf.taskr.domain.user.User;
 
 @Entity
-@Table(name="task_thread_message")
+@Table(name = "task_thread_message")
 public class TaskThreadMessage {
     @Id
-    @GeneratedValue(generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "uuid")
-    @Column(name = "id")
-    private String id;
+    @Column(unique = true, nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-    @Column(updatable = false)
-    private String taskSequence;
+    @Column(updatable = false, unique = true)
+    private String messageSequence;
+    
+    private Date date = new Date();
 
-    @CreatedBy
-    private String createdBy;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private User message_from;
 
-    @CreatedDate
-    private Date createdDate;
-
-    private String messageTo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private User message_to;
 
     private String message;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "task_backlog_id", updatable = false, nullable = false)
+    
+    //ManyToOne with TaskThread
+    @ManyToOne
+    @JoinColumn(name = "task_thread_id", updatable = false, nullable = false)
     @JsonIgnore
-    private TaskBacklog backlog;
+    private TaskThread taskThread;
 
+    @Column(updatable = false)
     private String taskIdentifier;
 
 
@@ -53,55 +54,55 @@ public class TaskThreadMessage {
     public TaskThreadMessage() {
     }
 
-    public TaskThreadMessage(String id, String taskSequence, String createdBy, Date createdDate, String messageTo, String message, TaskBacklog backlog, String taskIdentifier) {
+    public TaskThreadMessage(Long id, String messageSequence, Date date, User message_from, User message_to, String message, TaskThread taskThread, String taskIdentifier) {
         this.id = id;
-        this.taskSequence = taskSequence;
-        this.createdBy = createdBy;
-        this.createdDate = createdDate;
-        this.messageTo = messageTo;
+        this.messageSequence = messageSequence;
+        this.date = date;
+        this.message_from = message_from;
+        this.message_to = message_to;
         this.message = message;
-        this.backlog = backlog;
+        this.taskThread = taskThread;
         this.taskIdentifier = taskIdentifier;
     }
 
-    public String getId() {
+    public Long getId() {
         return this.id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getTaskSequence() {
-        return this.taskSequence;
+    public String getMessageSequence() {
+        return this.messageSequence;
     }
 
-    public void setTaskSequence(String taskSequence) {
-        this.taskSequence = taskSequence;
+    public void setMessageSequence(String messageSequence) {
+        this.messageSequence = messageSequence;
     }
 
-    public String getCreatedBy() {
-        return this.createdBy;
+    public Date getDate() {
+        return this.date;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
-    public Date getCreatedDate() {
-        return this.createdDate;
+    public User getMessage_from() {
+        return this.message_from;
     }
 
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
+    public void setMessage_from(User message_from) {
+        this.message_from = message_from;
     }
 
-    public String getMessageTo() {
-        return this.messageTo;
+    public User getMessage_to() {
+        return this.message_to;
     }
 
-    public void setMessageTo(String messageTo) {
-        this.messageTo = messageTo;
+    public void setMessage_to(User message_to) {
+        this.message_to = message_to;
     }
 
     public String getMessage() {
@@ -112,12 +113,12 @@ public class TaskThreadMessage {
         this.message = message;
     }
 
-    public TaskBacklog getBacklog() {
-        return this.backlog;
+    public TaskThread getTaskThread() {
+        return this.taskThread;
     }
 
-    public void setBacklog(TaskBacklog backlog) {
-        this.backlog = backlog;
+    public void setTaskThread(TaskThread taskThread) {
+        this.taskThread = taskThread;
     }
 
     public String getTaskIdentifier() {
@@ -128,28 +129,28 @@ public class TaskThreadMessage {
         this.taskIdentifier = taskIdentifier;
     }
 
-    public TaskThreadMessage id(String id) {
+    public TaskThreadMessage id(Long id) {
         this.id = id;
         return this;
     }
 
-    public TaskThreadMessage taskSequence(String taskSequence) {
-        this.taskSequence = taskSequence;
+    public TaskThreadMessage messageSequence(String messageSequence) {
+        this.messageSequence = messageSequence;
         return this;
     }
 
-    public TaskThreadMessage createdBy(String createdBy) {
-        this.createdBy = createdBy;
+    public TaskThreadMessage date(Date date) {
+        this.date = date;
         return this;
     }
 
-    public TaskThreadMessage createdDate(Date createdDate) {
-        this.createdDate = createdDate;
+    public TaskThreadMessage message_from(User message_from) {
+        this.message_from = message_from;
         return this;
     }
 
-    public TaskThreadMessage messageTo(String messageTo) {
-        this.messageTo = messageTo;
+    public TaskThreadMessage message_to(User message_to) {
+        this.message_to = message_to;
         return this;
     }
 
@@ -158,8 +159,8 @@ public class TaskThreadMessage {
         return this;
     }
 
-    public TaskThreadMessage backlog(TaskBacklog backlog) {
-        this.backlog = backlog;
+    public TaskThreadMessage taskThread(TaskThread taskThread) {
+        this.taskThread = taskThread;
         return this;
     }
 
@@ -176,27 +177,27 @@ public class TaskThreadMessage {
             return false;
         }
         TaskThreadMessage taskThreadMessage = (TaskThreadMessage) o;
-        return Objects.equals(id, taskThreadMessage.id) && Objects.equals(taskSequence, taskThreadMessage.taskSequence) && Objects.equals(createdBy, taskThreadMessage.createdBy) && Objects.equals(createdDate, taskThreadMessage.createdDate) && Objects.equals(messageTo, taskThreadMessage.messageTo) && Objects.equals(message, taskThreadMessage.message) && Objects.equals(backlog, taskThreadMessage.backlog) && Objects.equals(taskIdentifier, taskThreadMessage.taskIdentifier);
+        return Objects.equals(id, taskThreadMessage.id) && Objects.equals(messageSequence, taskThreadMessage.messageSequence) && Objects.equals(date, taskThreadMessage.date) && Objects.equals(message_from, taskThreadMessage.message_from) && Objects.equals(message_to, taskThreadMessage.message_to) && Objects.equals(message, taskThreadMessage.message) && Objects.equals(taskThread, taskThreadMessage.taskThread) && Objects.equals(taskIdentifier, taskThreadMessage.taskIdentifier);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, taskSequence, createdBy, createdDate, messageTo, message, backlog, taskIdentifier);
+        return Objects.hash(id, messageSequence, date, message_from, message_to, message, taskThread, taskIdentifier);
     }
 
     @Override
     public String toString() {
         return "{" +
             " id='" + getId() + "'" +
-            ", taskSequence='" + getTaskSequence() + "'" +
-            ", createdBy='" + getCreatedBy() + "'" +
-            ", createdDate='" + getCreatedDate() + "'" +
-            ", messageTo='" + getMessageTo() + "'" +
+            ", messageSequence='" + getMessageSequence() + "'" +
+            ", date='" + getDate() + "'" +
+            ", message_from='" + getMessage_from() + "'" +
+            ", message_to='" + getMessage_to() + "'" +
             ", message='" + getMessage() + "'" +
-            ", backlog='" + getBacklog() + "'" +
+            ", taskThread='" + getTaskThread() + "'" +
             ", taskIdentifier='" + getTaskIdentifier() + "'" +
             "}";
     }
     
-    
+
 }

@@ -1,41 +1,40 @@
 package micf.taskr.domain.task;
 
+import java.util.Date;
+import java.util.Objects;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import org.hibernate.annotations.GenericGenerator;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-
-import java.util.Date;
-// import java.util.Set;
-import java.util.Objects;
+import micf.taskr.domain.user.User;
+import micf.taskr.domain.workflow.Workflow;
 
 @Entity
-@Table(name="tasks")
+@Table(name = "tasks")
 public class Task {
     @Id
-    @GeneratedValue(generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "uuid")
-    private String id;
+    @Column(unique = true, nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-    // foreign key to task_classification table
-    @NotBlank(message = "Classification cannot be left blank")
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "classification", referencedColumnName = "id")
-    private TaskClassification classification;
+    @Column(updatable = false, nullable = false, unique = true)
+    private String taskIdentifier;
+
+    private String classification;
 
     @NotBlank(message = "Title cannot be left blank")
     private String title;
@@ -43,79 +42,82 @@ public class Task {
     @NotBlank(message = "Description cannot be left blank")
     private String description;
 
-    // foreign key to task_attachments table
-    // private Set<TaskAttachment> attachments;
+    
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date created_date;
 
-    @CreatedDate
-    private Date createdDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date due_date;
 
-    private Date updatedAt;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private User created_by;
 
-    @NotBlank(message = "Due date cannot be left blank")
-    private Date dueDate;
-
-    // needs to be a foreign key to Users table
-    @CreatedBy
-    private String createdBy;
-
-    // This needs to be a foreign key to the Users table
-    private String assignedTo;
-
-    private String parentTask;
-
-    private Integer priority;
-
-    //ManyToOne with Backlog
-    @Column(updatable = false)
-    private String taskIdentifier;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private User assigned_to;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "task")
     @JsonIgnore
-    private TaskBacklog backlog;
+    private TaskThread message_thread;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "task")
+    @JsonIgnore
+    private Workflow workflow;
+
+    private Date updated_at;
 
     @PrePersist
-    protected void onCreate() {
-        this.createdDate = new Date();
+    protected void onCreate(){
+        this.created_date = new Date();
     }
 
     @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = new Date();
+    protected void onUpdate(){
+        this.updated_at = new Date();
     }
+
 
 
     public Task() {
     }
 
-    public Task(String id, TaskClassification classification, String title, String description, Date createdDate, Date updatedAt, Date dueDate, String createdBy, String assignedTo, String parentTask, Integer priority, String taskIdentifier, TaskBacklog backlog) {
+    public Task(Long id, String taskIdentifier, String classification, String title, String description, Date created_date, Date due_date, User created_by, User assigned_to, TaskThread message_thread, Workflow workflow, Date updated_at) {
         this.id = id;
+        this.taskIdentifier = taskIdentifier;
         this.classification = classification;
         this.title = title;
         this.description = description;
-        this.createdDate = createdDate;
-        this.updatedAt = updatedAt;
-        this.dueDate = dueDate;
-        this.createdBy = createdBy;
-        this.assignedTo = assignedTo;
-        this.parentTask = parentTask;
-        this.priority = priority;
-        this.taskIdentifier = taskIdentifier;
-        this.backlog = backlog;
+        this.created_date = created_date;
+        this.due_date = due_date;
+        this.created_by = created_by;
+        this.assigned_to = assigned_to;
+        this.message_thread = message_thread;
+        this.workflow = workflow;
+        this.updated_at = updated_at;
     }
 
-    public String getId() {
+    public Long getId() {
         return this.id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public TaskClassification getClassification() {
+    public String getTaskIdentifier() {
+        return this.taskIdentifier;
+    }
+
+    public void setTaskIdentifier(String taskIdentifier) {
+        this.taskIdentifier = taskIdentifier;
+    }
+
+    public String getClassification() {
         return this.classification;
     }
 
-    public void setClassification(TaskClassification classification) {
+    public void setClassification(String classification) {
         this.classification = classification;
     }
 
@@ -135,84 +137,73 @@ public class Task {
         this.description = description;
     }
 
-    public Date getCreatedDate() {
-        return this.createdDate;
+    public Date getCreated_date() {
+        return this.created_date;
     }
 
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
+    public void setCreated_date(Date created_date) {
+        this.created_date = created_date;
     }
 
-    public Date getUpdatedAt() {
-        return this.updatedAt;
+    public Date getDue_date() {
+        return this.due_date;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setDue_date(Date due_date) {
+        this.due_date = due_date;
     }
 
-    public Date getDueDate() {
-        return this.dueDate;
+    public User getCreated_by() {
+        return this.created_by;
     }
 
-    public void setDueDate(Date dueDate) {
-        this.dueDate = dueDate;
+    public void setCreated_by(User created_by) {
+        this.created_by = created_by;
     }
 
-    public String getCreatedBy() {
-        return this.createdBy;
+    public User getAssigned_to() {
+        return this.assigned_to;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
+    public void setAssigned_to(User assigned_to) {
+        this.assigned_to = assigned_to;
     }
 
-    public String getAssignedTo() {
-        return this.assignedTo;
+    public TaskThread getMessage_thread() {
+        return this.message_thread;
     }
 
-    public void setAssignedTo(String assignedTo) {
-        this.assignedTo = assignedTo;
+    public void setMessage_thread(TaskThread message_thread) {
+        this.message_thread = message_thread;
     }
 
-    public String getParentTask() {
-        return this.parentTask;
+    public Workflow getWorkflow() {
+        return this.workflow;
     }
 
-    public void setParentTask(String parentTask) {
-        this.parentTask = parentTask;
+    public void setWorkflow(Workflow workflow) {
+        this.workflow = workflow;
     }
 
-    public Integer getPriority() {
-        return this.priority;
+    public Date getUpdated_at() {
+        return this.updated_at;
     }
 
-    public void setPriority(Integer priority) {
-        this.priority = priority;
+    public void setUpdated_at(Date updated_at) {
+        this.updated_at = updated_at;
     }
 
-    public String getTaskIdentifier() {
-        return this.taskIdentifier;
-    }
-
-    public void setTaskIdentifier(String taskIdentifier) {
-        this.taskIdentifier = taskIdentifier;
-    }
-
-    public TaskBacklog getBacklog() {
-        return this.backlog;
-    }
-
-    public void setBacklog(TaskBacklog backlog) {
-        this.backlog = backlog;
-    }
-
-    public Task id(String id) {
+    public Task id(Long id) {
         this.id = id;
         return this;
     }
 
-    public Task classification(TaskClassification classification) {
+    public Task taskIdentifier(String taskIdentifier) {
+        this.taskIdentifier = taskIdentifier;
+        return this;
+    }
+
+    public Task classification(String classification) {
         this.classification = classification;
         return this;
     }
@@ -227,48 +218,38 @@ public class Task {
         return this;
     }
 
-    public Task createdDate(Date createdDate) {
-        this.createdDate = createdDate;
+    public Task created_date(Date created_date) {
+        this.created_date = created_date;
         return this;
     }
 
-    public Task updatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
+    public Task due_date(Date due_date) {
+        this.due_date = due_date;
         return this;
     }
 
-    public Task dueDate(Date dueDate) {
-        this.dueDate = dueDate;
+    public Task created_by(User created_by) {
+        this.created_by = created_by;
         return this;
     }
 
-    public Task createdBy(String createdBy) {
-        this.createdBy = createdBy;
+    public Task assigned_to(User assigned_to) {
+        this.assigned_to = assigned_to;
         return this;
     }
 
-    public Task assignedTo(String assignedTo) {
-        this.assignedTo = assignedTo;
+    public Task message_thread(TaskThread message_thread) {
+        this.message_thread = message_thread;
         return this;
     }
 
-    public Task parentTask(String parentTask) {
-        this.parentTask = parentTask;
+    public Task workflow(Workflow workflow) {
+        this.workflow = workflow;
         return this;
     }
 
-    public Task priority(Integer priority) {
-        this.priority = priority;
-        return this;
-    }
-
-    public Task taskIdentifier(String taskIdentifier) {
-        this.taskIdentifier = taskIdentifier;
-        return this;
-    }
-
-    public Task backlog(TaskBacklog backlog) {
-        this.backlog = backlog;
+    public Task updated_at(Date updated_at) {
+        this.updated_at = updated_at;
         return this;
     }
 
@@ -280,31 +261,31 @@ public class Task {
             return false;
         }
         Task task = (Task) o;
-        return Objects.equals(id, task.id) && Objects.equals(classification, task.classification) && Objects.equals(title, task.title) && Objects.equals(description, task.description) && Objects.equals(createdDate, task.createdDate) && Objects.equals(updatedAt, task.updatedAt) && Objects.equals(dueDate, task.dueDate) && Objects.equals(createdBy, task.createdBy) && Objects.equals(assignedTo, task.assignedTo) && Objects.equals(parentTask, task.parentTask) && Objects.equals(priority, task.priority) && Objects.equals(taskIdentifier, task.taskIdentifier) && Objects.equals(backlog, task.backlog);
+        return Objects.equals(id, task.id) && Objects.equals(taskIdentifier, task.taskIdentifier) && Objects.equals(classification, task.classification) && Objects.equals(title, task.title) && Objects.equals(description, task.description) && Objects.equals(created_date, task.created_date) && Objects.equals(due_date, task.due_date) && Objects.equals(created_by, task.created_by) && Objects.equals(assigned_to, task.assigned_to) && Objects.equals(message_thread, task.message_thread) && Objects.equals(workflow, task.workflow) && Objects.equals(updated_at, task.updated_at);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, classification, title, description, createdDate, updatedAt, dueDate, createdBy, assignedTo, parentTask, priority, taskIdentifier, backlog);
+        return Objects.hash(id, taskIdentifier, classification, title, description, created_date, due_date, created_by, assigned_to, message_thread, workflow, updated_at);
     }
 
     @Override
     public String toString() {
         return "{" +
             " id='" + getId() + "'" +
+            ", taskIdentifier='" + getTaskIdentifier() + "'" +
             ", classification='" + getClassification() + "'" +
             ", title='" + getTitle() + "'" +
             ", description='" + getDescription() + "'" +
-            ", createdDate='" + getCreatedDate() + "'" +
-            ", updatedAt='" + getUpdatedAt() + "'" +
-            ", dueDate='" + getDueDate() + "'" +
-            ", createdBy='" + getCreatedBy() + "'" +
-            ", assignedTo='" + getAssignedTo() + "'" +
-            ", parentTask='" + getParentTask() + "'" +
-            ", priority='" + getPriority() + "'" +
-            ", taskIdentifier='" + getTaskIdentifier() + "'" +
-            ", backlog='" + getBacklog() + "'" +
+            ", created_date='" + getCreated_date() + "'" +
+            ", due_date='" + getDue_date() + "'" +
+            ", created_by='" + getCreated_by() + "'" +
+            ", assigned_to='" + getAssigned_to() + "'" +
+            ", message_thread='" + getMessage_thread() + "'" +
+            ", workflow='" + getWorkflow() + "'" +
+            ", updated_at='" + getUpdated_at() + "'" +
             "}";
     }
+    
 
 }

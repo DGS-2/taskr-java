@@ -1,15 +1,12 @@
 package micf.taskr.service.user;
 
-import java.util.List;
 import java.util.Optional;
 
 import micf.taskr.domain.user.User;
-import micf.taskr.domain.user.UserDto;
-import micf.taskr.exception.register.EmailExistsException;
 
 public interface UserService {
 
-    User saveUser(UserDto accountDto) throws EmailExistsException;
+    User saveUser(User user);
 
     // User getUser(String verificationToken);
 

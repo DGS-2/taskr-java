@@ -18,9 +18,12 @@ export default theme => ({
       marginLeft: '-4px'
     },
     notificationsButton: {
-      marginLeft: 'auto'
+      marginLeft: theme.spacing.unit
     },
     signOutButton: {
       marginLeft: theme.spacing.unit
+    },
+    addWorkflowButton: {
+      marginLeft: 'auto'
     }
   });

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import micf.taskr.domain.user.UserDto;
 import micf.taskr.payload.JWTLoginSucessReponse;
 import micf.taskr.payload.LoginRequest;
 import micf.taskr.security.jwt.JwtTokenProvider;
@@ -24,54 +23,64 @@ import micf.taskr.domain.user.User;
 
 import micf.taskr.service.user.UserServiceImpl;
 import micf.taskr.validation.MapValidationError;
+import micf.taskr.validation.user.UserValidator;
 
 import static micf.taskr.config.SecurityConstraints.TOKEN_PREFIX;
 
+/**
+ * This class is the User rest controller.
+ * @version 1.0
+ */
 @RestController
-@RequestMapping(path = "/api")
+@RequestMapping(path = "/api/user")
 @CrossOrigin
 public class UserRestController {
 
     @Autowired
-    MapValidationError mapValidationError;
+    private MapValidationError mapValidationErrorService;
 
     @Autowired
-    UserServiceImpl userService;
+    private UserServiceImpl userService;
 
     @Autowired
-    JwtTokenProvider tokenProvider;
+    private UserValidator userValidator;
 
     @Autowired
-    AuthenticationManager authenticationManager;
+    private JwtTokenProvider tokenProvider;
 
-    @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody UserDto userDto, BindingResult result) {
-        // Validate that passwords match
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
-        ResponseEntity<?> errorMap = mapValidationError.MapValidationErrors(result);
-        if(errorMap != null) return errorMap;
 
-        final User newUser = userService.saveUser(userDto);
-
-        return new ResponseEntity<User>(newUser, HttpStatus.CREATED);
-    }
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest, BindingResult result) {
-        ResponseEntity<?> errorMap = mapValidationError.MapValidationErrors(result);
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest, BindingResult result){
+        ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationErrors(result);
         if(errorMap != null) return errorMap;
 
         Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(
-                loginRequest.getUsername(),
-                loginRequest.getPassword()
-            )
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getUsername(),
+                        loginRequest.getPassword()
+                )
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        String jwt = TOKEN_PREFIX + tokenProvider.generateToken(authentication);
+        String jwt = TOKEN_PREFIX +  tokenProvider.generateToken(authentication);
 
         return ResponseEntity.ok(new JWTLoginSucessReponse(true, jwt));
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> registerUser(@Valid @RequestBody User user, BindingResult result){
+        // Validate passwords match
+        userValidator.validate(user,result);
+
+        ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationErrors(result);
+        if(errorMap != null)return errorMap;
+
+        User newUser = userService.saveUser(user);
+
+        return  new ResponseEntity<User>(newUser, HttpStatus.CREATED);
     }
 }

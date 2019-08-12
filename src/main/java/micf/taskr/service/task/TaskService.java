@@ -1,12 +1,8 @@
 package micf.taskr.service.task;
 
-import java.util.List;
-
-import micf.taskr.domain.task.*;
-
+// import micf.taskr.domain.task.Task;
+// import micf.taskr.domain.user.User;
 public interface TaskService {
-
-    List<Task> findAll();
-
-    Task findById(String id);
+    
+    // Task createOrUpdate(Task task, User user);
 }

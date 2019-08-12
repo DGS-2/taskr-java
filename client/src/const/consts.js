@@ -7,7 +7,7 @@ export const delimiters = [KeyCodes.comma, KeyCodes.enter];
 
 export const priorityOptions = [
   { label: '', value: 0 },
-  { label: 'Critical', value: 'Critical' },
+  { label: 'Urgent', value: 'Urgent' },
   { label: 'Important', value: 'Important' }
 ]
 
@@ -116,3 +116,9 @@ export const dgsSites = [
   { label: 'DGS-4', value: '4' },
   { label: 'DGS-5', value: '5' },
 ]
+
+export const classifications = [
+  { label: '', value: '' },
+  { label: 'UNCLASSIFIED', value: 'UNCLASSIFIED' },
+  { label: 'UNCLASSIFIED//FOUO', value: 'UNCLASSIFIED//FOUO' },
+];

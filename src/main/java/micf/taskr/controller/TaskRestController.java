@@ -1,83 +1,72 @@
 package micf.taskr.controller;
 
-import micf.taskr.domain.task.*;
-import micf.taskr.service.task.TaskServiceImpl;
-import micf.taskr.validation.MapValidationError;
-
-// import java.util.Collection;
+import java.security.Principal;
+// import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-// Validation
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import micf.taskr.validation.MapValidationError;
+import micf.taskr.domain.task.Task;
+import micf.taskr.service.task.TaskServiceImpl;
 
 @RestController
-@RequestMapping("/api")
+@CrossOrigin
+@RequestMapping(path = "/api/task")
 public class TaskRestController {
-    private TaskServiceImpl taskService;
-
-    // inject service into controller
+    
     @Autowired
-    public TaskRestController(TaskServiceImpl taskService) {
-        this.taskService = taskService;
-    }
+    private TaskServiceImpl taskServiceImpl;
 
-    // autowire validation error map from BindingResult->result
-    @Autowired MapValidationError mapValidationError;
+    @Autowired
+    private MapValidationError mapValidationError;
 
-    // Create or update task
-    @PostMapping("/create-task")
-    public ResponseEntity<?> createNewTask(@Valid @RequestBody Task task, BindingResult result) {
-
-        ResponseEntity<?> errorMap = mapValidationError.MapValidationErrors(result);
-
-        if(errorMap != null) return errorMap;
-
-        Task newTask = taskService.saveOrUpdateTask(task);
-        return new ResponseEntity<Task>(newTask, HttpStatus.CREATED);
-    }
-
-    // Get task by id
-    @GetMapping("/task/{id}")
-    public Task getTask(@PathVariable String id) {
-        Task task = taskService.findById(id);
+    @PostMapping(path = "")
+    public ResponseEntity<?> createNewTask(@Valid @RequestBody Task task, BindingResult result, Principal principal) {
         
-        if(task == null) {
-            throw new RuntimeException("Task id not found - " + id);
-        }
-
-        return task;
-    }
-
-    // Get all tasks
-    @GetMapping("/tasks")
-    public Iterable<Task> findAll() {
-        return taskService.findAll();
-    }
-
-    // Delete/Archive Task
-    @DeleteMapping("/delete-task/{id}")
-    public ResponseEntity<?> deleteTask(@PathVariable String id) {
-        taskService.deleteTaskById(id);
-
-        return new ResponseEntity<String>("Task with '" + id + "' was deleted.", HttpStatus.OK);
-    }
-
-    // Update Task
-    @PostMapping("/update-task/{id}")
-    public ResponseEntity<?> updateTask(@Valid @RequestBody Task task, BindingResult result) {
-
         ResponseEntity<?> errorMap = mapValidationError.MapValidationErrors(result);
-
         if(errorMap != null) return errorMap;
 
-        Task newTask = taskService.saveOrUpdateTask(task);
+        Task newTask = taskServiceImpl.createOrUpdate(task, principal.getName());
         return new ResponseEntity<Task>(newTask, HttpStatus.CREATED);
+    }
+
+    @GetMapping(path = "/{taskIdentifier}")
+    public ResponseEntity<?> getTaskById(@PathVariable String taskIdentifier, Principal principal) {
+
+        Task task = taskServiceImpl.findTaskByIdentifier(taskIdentifier, principal.getName());
+
+        return new ResponseEntity<Task>(task, HttpStatus.OK); 
+    }
+
+    // @GetMapping(path = "/all-assigned")
+    // public List<Task> getAllAssignedTasks(Principal principal) {
+        // Bring in User and perform match with User.username and principal.getName()
+        // then return tasks that assignedTo are equal to principal
+    //     return taskServiceImpl.findAllAssignedTasks(principal.getName());
+    // }
+
+    // @GetMapping(path = "/all-created")
+    // public List<Task> getAllCreatedTasks(Principal principal) {
+    //     return taskServiceImpl.findAllCreatedTasks(principal.getName());
+    // }
+
+    @DeleteMapping(path = "/{taskIdentifier}")
+    public ResponseEntity<?> deleteTask(@PathVariable String taskIdentifier, Principal principal) {
+        taskServiceImpl.deleteTaskByIdentifier(taskIdentifier, principal.getName());
+
+        return new ResponseEntity<String>("Task was deleted successfully", HttpStatus.OK);
     }
 }

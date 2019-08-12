@@ -1,6 +1,6 @@
 /.gradle/
 /bin/
-/.settings
+/.settings/
 !gradle/wrapper/gradle-wrapper.jar
 /build/
 

@@ -6,10 +6,12 @@ import { GET_ERRORS, SET_CURRENT_USER, SET_REGISTERED_USER, CHANGE_PASSWORD } fr
 
 import { getCurrentProfile, getProfiles } from "./profileActions";
 
+const endpoint = "http://localhost:8080";
+
 // Register User
 export const registerUser = (userData) => dispatch => {
   axios
-    .post('/users/register', userData)
+    .post(`${endpoint}/api/user/register`, userData)
     .then(res => res.data)
     .catch(err => {
         dispatch({
@@ -59,7 +61,7 @@ export const resetPassword = (data, history) => dispatch => {
 // Login - Get User Token
 export const loginUser = userData => dispatch => {
   axios
-    .post('/users/login', userData)
+    .post(`${endpoint}/api/user/login`, userData) 
     .then(res => {
       // Save to localStorage
       const { token } = res.data;
